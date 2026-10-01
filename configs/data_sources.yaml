@@ -1,0 +1,36 @@
+condition: "Type 2 Diabetes"
+
+prediction_target:
+  type: "binary"
+  description: "Glucose exceeds 180 mg/dL within the next 2 hours"
+  threshold_mg_dl: 180
+  horizon_minutes: 120
+
+ehr:
+  source: "Synthea"
+  type: "synthetic"
+  purpose: "Static patient-level EHR features"
+
+cgm:
+  source: "TBD"
+  type: "continuous_glucose_monitoring"
+  purpose: "Dynamic glucose time-series"
+
+features:
+  static:
+    - age
+    - sex
+    - bmi
+    - hba1c
+    - fasting_glucose
+    - hypertension
+    - cardiovascular_disease
+    - medication_classes
+
+  dynamic:
+    - recent_mean_glucose
+    - recent_std_glucose
+    - glucose_slope
+    - time_in_range
+    - hyperglycemia_episodes
+    - lagged_glucose
