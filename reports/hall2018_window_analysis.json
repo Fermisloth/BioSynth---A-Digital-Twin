@@ -1,0 +1,108 @@
+{
+  "dataset": "Hall_2018",
+  "configuration": {
+    "lookback_minutes": [
+      30,
+      60,
+      120
+    ],
+    "prediction_horizon_minutes": 120,
+    "glucose_threshold_mg_dl": 180,
+    "segment_gap_minutes": 15
+  },
+  "participants": {
+    "metadata_count": 57,
+    "glucose_file_count": 57,
+    "analysis_error_count": 0
+  },
+  "populations": {
+    "all": {
+      "30": {
+        "valid_windows": 91273,
+        "positive_windows": 2367,
+        "negative_windows": 88906,
+        "positive_rate": 0.025933189442661028
+      },
+      "60": {
+        "valid_windows": 89155,
+        "positive_windows": 2330,
+        "negative_windows": 86825,
+        "positive_rate": 0.026134260557456115
+      },
+      "120": {
+        "valid_windows": 85199,
+        "positive_windows": 2278,
+        "negative_windows": 82921,
+        "positive_rate": 0.02673740302116222
+      }
+    },
+    "T2D": {
+      "30": {
+        "valid_windows": 7916,
+        "positive_windows": 807,
+        "negative_windows": 7109,
+        "positive_rate": 0.10194542698332491
+      },
+      "60": {
+        "valid_windows": 7746,
+        "positive_windows": 802,
+        "negative_windows": 6944,
+        "positive_rate": 0.10353730957913762
+      },
+      "120": {
+        "valid_windows": 7450,
+        "positive_windows": 779,
+        "negative_windows": 6671,
+        "positive_rate": 0.10456375838926174
+      }
+    },
+    "Prediabetes": {
+      "30": {
+        "valid_windows": 22374,
+        "positive_windows": 745,
+        "negative_windows": 21629,
+        "positive_rate": 0.03329757754536516
+      },
+      "60": {
+        "valid_windows": 21884,
+        "positive_windows": 735,
+        "negative_windows": 21149,
+        "positive_rate": 0.033586181685249496
+      },
+      "120": {
+        "valid_windows": 20945,
+        "positive_windows": 736,
+        "negative_windows": 20209,
+        "positive_rate": 0.03513965146813082
+      }
+    },
+    "No diabetes": {
+      "30": {
+        "valid_windows": 60983,
+        "positive_windows": 815,
+        "negative_windows": 60168,
+        "positive_rate": 0.013364380237115262
+      },
+      "60": {
+        "valid_windows": 59525,
+        "positive_windows": 793,
+        "negative_windows": 58732,
+        "positive_rate": 0.013322133557328853
+      },
+      "120": {
+        "valid_windows": 56804,
+        "positive_windows": 763,
+        "negative_windows": 56041,
+        "positive_rate": 0.01343215266530526
+      }
+    }
+  },
+  "notes": [
+    "Prediction windows are constructed using actual timestamps.",
+    "Windows are never allowed to cross recording gaps larger than the configured segment threshold.",
+    "Non-numeric glucose values are not converted into invented numeric values.",
+    "The target is positive when numeric glucose exceeds 180 mg/dL during the following 2-hour horizon.",
+    "This analysis does not create a train/test split.",
+    "This analysis does not modify raw data."
+  ]
+}
