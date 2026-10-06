@@ -1,0 +1,193 @@
+{
+  "input_prediction_dataset": "reports\\hall2018_prediction_dataset.csv",
+  "raw_cgm_directory": "data\\01_raw\\Hall_2018\\Hall_2018-extracted-glucose-files",
+  "output": "reports\\hall2018_cgm_trajectory_features.csv",
+  "rows": 89329,
+  "participants": 57,
+  "lookback_minutes": 60,
+  "maximum_gap_minutes": 15,
+  "high_threshold_mg_dl": 180.0,
+  "target": {
+    "name": "pre_event_target",
+    "positive": 1662,
+    "negative": 87667,
+    "positive_rate": 0.018605380111721838
+  },
+  "feature_columns": [
+    "current_glucose_mg_dl",
+    "current_is_high",
+    "history_mean_glucose",
+    "history_median_glucose",
+    "history_min_glucose",
+    "history_max_glucose",
+    "history_range_glucose",
+    "glucose_change_15m",
+    "glucose_change_30m",
+    "glucose_change_60m",
+    "glucose_slope_per_hour",
+    "history_std_glucose",
+    "history_cv_glucose",
+    "history_high_count",
+    "history_high_fraction",
+    "history_minutes_above_180",
+    "trajectory_numeric_count",
+    "trajectory_actual_history_minutes"
+  ],
+  "feature_count": 18,
+  "missingness": {
+    "current_glucose_mg_dl": 3,
+    "current_is_high": 0,
+    "history_mean_glucose": 0,
+    "history_median_glucose": 0,
+    "history_min_glucose": 0,
+    "history_max_glucose": 0,
+    "history_range_glucose": 0,
+    "glucose_change_15m": 0,
+    "glucose_change_30m": 0,
+    "glucose_change_60m": 1,
+    "glucose_slope_per_hour": 0,
+    "history_std_glucose": 0,
+    "history_cv_glucose": 0,
+    "history_high_count": 0,
+    "history_high_fraction": 0,
+    "history_minutes_above_180": 0,
+    "trajectory_numeric_count": 0,
+    "trajectory_actual_history_minutes": 0
+  },
+  "numeric_ranges": {
+    "current_glucose_mg_dl": {
+      "min": 41.0,
+      "max": 303.0,
+      "mean": 102.13702617379039,
+      "median": 99.0
+    },
+    "current_is_high": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.008160843623011563,
+      "median": 0.0
+    },
+    "history_mean_glucose": {
+      "min": 44.23076923076923,
+      "max": 296.53846153846155,
+      "mean": 102.16545526275094,
+      "median": 99.16666666666667
+    },
+    "history_median_glucose": {
+      "min": 44.0,
+      "max": 298.0,
+      "mean": 102.02376048091885,
+      "median": 99.0
+    },
+    "history_min_glucose": {
+      "min": 40.0,
+      "max": 286.0,
+      "mean": 92.77010825151966,
+      "median": 91.0
+    },
+    "history_max_glucose": {
+      "min": 45.0,
+      "max": 303.0,
+      "mean": 111.90192434707653,
+      "median": 108.0
+    },
+    "history_range_glucose": {
+      "min": 0.0,
+      "max": 169.0,
+      "mean": 19.131816095556875,
+      "median": 15.0
+    },
+    "glucose_change_15m": {
+      "min": -123.0,
+      "max": 87.0,
+      "mean": -0.01877329870478792,
+      "median": 0.0
+    },
+    "glucose_change_30m": {
+      "min": -112.0,
+      "max": 120.0,
+      "mean": -0.03327027057282629,
+      "median": 0.0
+    },
+    "glucose_change_60m": {
+      "min": -140.0,
+      "max": 169.0,
+      "mean": -0.045875873186458895,
+      "median": -1.0
+    },
+    "glucose_slope_per_hour": {
+      "min": -144.4000000000001,
+      "max": 193.7142857142857,
+      "mean": -0.04635252387292449,
+      "median": -0.6593406593407114
+    },
+    "history_std_glucose": {
+      "min": 0.0,
+      "max": 63.5891258241291,
+      "mean": 6.482626401537809,
+      "median": 4.746118522081073
+    },
+    "history_cv_glucose": {
+      "min": 0.0,
+      "max": 0.44903255309983464,
+      "mean": 0.062336991625960875,
+      "median": 0.04801713938897421
+    },
+    "history_high_count": {
+      "min": 0.0,
+      "max": 13.0,
+      "mean": 0.10619171825498998,
+      "median": 0.0
+    },
+    "history_high_fraction": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.008196312674701552,
+      "median": 0.0
+    },
+    "history_minutes_above_180": {
+      "min": 0.0,
+      "max": 60.0,
+      "mean": 0.4912178575826439,
+      "median": 0.0
+    },
+    "trajectory_numeric_count": {
+      "min": 6.0,
+      "max": 14.0,
+      "mean": 12.895453883957058,
+      "median": 13.0
+    },
+    "trajectory_actual_history_minutes": {
+      "min": 45.0,
+      "max": 60.0,
+      "mean": 59.99960818994951,
+      "median": 60.0
+    }
+  },
+  "invalid_value_checks": {
+    "negative_current_glucose": 0,
+    "negative_history_std": 0,
+    "negative_history_range": 0,
+    "negative_numeric_count": 0,
+    "negative_high_count": 0,
+    "high_fraction_outside_0_1": 0
+  },
+  "history_quality": {
+    "rows_without_any_history": 0,
+    "rows_without_numeric_history": 0,
+    "rows_with_current_glucose_disagreement": 0
+  },
+  "leakage_audit": {
+    "future_timestamp_violations": 0,
+    "forbidden_columns_in_feature_matrix": [],
+    "status": "PASS"
+  },
+  "methodology_notes": [
+    "Only raw CGM observations at or before each prediction timestamp are used.",
+    "A history window cannot cross a gap greater than 15 minutes.",
+    "Categorical 'Low' readings remain nonnumeric and are excluded from numeric trajectory statistics.",
+    "No future/event-derived prediction columns are used as features.",
+    "Time above 180 mg/dL is approximated from observed intervals and is not inferred across missing periods.",
+    "Trajectory features are calculated directly from raw timestamped CGM observations."
+  ]
+}

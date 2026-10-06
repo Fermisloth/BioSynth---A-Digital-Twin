@@ -1,0 +1,162 @@
+{
+  "input": "D:\\Projects\\digital-twin-poc\\reports\\hall2018_prediction_dataset.csv",
+  "overall": {
+    "total_rows": 89329,
+    "participants": 57,
+    "future_hyperglycemia": {
+      "positive": 2333,
+      "negative": 86996,
+      "positive_rate": 0.02611693850821122
+    },
+    "pre_event_target": {
+      "positive": 1662,
+      "negative": 87667,
+      "positive_rate": 0.018605380111721838
+    },
+    "event_underway_rows": 737,
+    "prediction_class_counts": {
+      "negative": 86930,
+      "pre_event": 1662,
+      "event_underway": 737
+    },
+    "event_status_counts": {
+      "no_event": 59081,
+      "pre_event": 29511,
+      "event_underway": 737
+    }
+  },
+  "diabetes_type_summary": [
+    {
+      "diabetes_type": "No diabetes",
+      "rows": 59639,
+      "participants": 38,
+      "future_positive": 795,
+      "pre_event_positive": 639,
+      "event_underway": 182,
+      "future_positive_rate": 0.0133302033903989,
+      "pre_event_positive_rate": 0.010714465366622511
+    },
+    {
+      "diabetes_type": "Prediabetes",
+      "rows": 21928,
+      "participants": 14,
+      "future_positive": 736,
+      "pre_event_positive": 542,
+      "event_underway": 214,
+      "future_positive_rate": 0.03356439255746078,
+      "pre_event_positive_rate": 0.02471725647573878
+    },
+    {
+      "diabetes_type": "T2D",
+      "rows": 7762,
+      "participants": 5,
+      "future_positive": 802,
+      "pre_event_positive": 481,
+      "event_underway": 341,
+      "future_positive_rate": 0.10332388559649575,
+      "pre_event_positive_rate": 0.06196856480288585
+    }
+  ],
+  "t2d_participant_summary": [
+    {
+      "person_id": "2133-018",
+      "rows": 1678,
+      "future_positive": 436,
+      "pre_event_positive": 243,
+      "event_underway": 202,
+      "unique_events": 12,
+      "future_positive_rate": 0.2598331346841478,
+      "pre_event_positive_rate": 0.14481525625744934
+    },
+    {
+      "person_id": "2133-004",
+      "rows": 1689,
+      "future_positive": 203,
+      "pre_event_positive": 118,
+      "event_underway": 90,
+      "unique_events": 5,
+      "future_positive_rate": 0.1201894612196566,
+      "pre_event_positive_rate": 0.06986382474837181
+    },
+    {
+      "person_id": "1636-69-001",
+      "rows": 1658,
+      "future_positive": 139,
+      "pre_event_positive": 97,
+      "event_underway": 47,
+      "unique_events": 5,
+      "future_positive_rate": 0.08383594692400483,
+      "pre_event_positive_rate": 0.05850422195416164
+    },
+    {
+      "person_id": "2133-039",
+      "rows": 1120,
+      "future_positive": 24,
+      "pre_event_positive": 23,
+      "event_underway": 2,
+      "unique_events": 2,
+      "future_positive_rate": 0.02142857142857143,
+      "pre_event_positive_rate": 0.020535714285714286
+    },
+    {
+      "person_id": "1636-69-091",
+      "rows": 1617,
+      "future_positive": 0,
+      "pre_event_positive": 0,
+      "event_underway": 0,
+      "unique_events": 0,
+      "future_positive_rate": 0.0,
+      "pre_event_positive_rate": 0.0
+    }
+  ],
+  "event_summary": {
+    "unique_events_with_pre_event_predictions": 83,
+    "total_pre_event_rows": 1662,
+    "median_rows_per_event": 23.0,
+    "mean_rows_per_event": 20.02409638554217,
+    "max_rows_per_event": 24,
+    "events_with_1_row": 2,
+    "events_with_2_to_5_rows": 4,
+    "events_with_6_to_20_rows": 15,
+    "events_with_more_than_20_rows": 62
+  },
+  "lead_time": {
+    "rows": 1662,
+    "min_minutes": 5.0,
+    "median_minutes": 60.0,
+    "mean_minutes": 61.40493381468111,
+    "max_minutes": 120.0,
+    "bins": {
+      "0-15_minutes": {
+        "count": 222,
+        "percentage": 0.13357400722021662
+      },
+      "15-30_minutes": {
+        "count": 223,
+        "percentage": 0.1341756919374248
+      },
+      "30-60_minutes": {
+        "count": 406,
+        "percentage": 0.24428399518652227
+      },
+      "60-120_minutes": {
+        "count": 811,
+        "percentage": 0.4879663056558363
+      }
+    }
+  },
+  "concentration": {
+    "participant_concentration": {
+      "top_1_share": 0.5051975051975052,
+      "top_2_share": 0.7505197505197505,
+      "participants_with_pre_event_rows": 4
+    },
+    "event_concentration": {
+      "top_1_share": 0.01444043321299639,
+      "top_5_share": 0.07220216606498195,
+      "top_10_share": 0.1444043321299639,
+      "events_with_pre_event_rows": 83
+    }
+  },
+  "preliminary_status": "PROCEED TO TARGET REVIEW \u2014 event and participant structure should now be used to finalize the modeling target."
+}
