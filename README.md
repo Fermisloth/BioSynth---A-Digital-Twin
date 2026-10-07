@@ -2,6 +2,8 @@
 
 A research-grade proof of concept for a patient-specific digital twin that combines longitudinal EHR data with dynamic physiological time-series data to support predictive health monitoring.
 
+For a beginner-friendly walkthrough of the current system, data flow, model, runtime, and dashboard, see [docs/BIOSYNTH_TECHNICAL_GUIDE.md](docs/BIOSYNTH_TECHNICAL_GUIDE.md).
+
 ## Project Status
 
 **Current phase:** Foundation / Data Layer
@@ -898,6 +900,101 @@ Launch command:
 .\.venv\Scripts\streamlit.exe run app.py
 ```
 
+## Guided Judge-Facing Dashboard Replay
+
+The Streamlit dashboard has been upgraded into a guided judge-facing Digital Twin replay while keeping the same local app:
+
+```text
+app.py
+```
+
+Demo story:
+
+```text
+BioSynth watches recent CGM trajectory and estimates the risk of crossing the >180 mg/dL POC hyperglycemia threshold within the next 120 minutes.
+```
+
+Selected guided demonstration event:
+
+* Participant: `SYN-0085`
+* Event ID: `SYN-0085-0-32`
+* Event start: `2026-01-04 13:40:00`
+* Event peak glucose: 400.0 mg/dL
+
+Dashboard modes:
+
+* `GUIDED DEMO`: default mode with Previous, Next, and Reset controls through real timestamps around the selected synthetic event
+* `EXPLORE TIMELINE`: manual slider mode for inspecting the participant timeline
+
+Current judge-facing UI sections:
+
+* Strong BioSynth header and plain-English demo story
+* Synthetic virtual participant label
+* Four primary state cards: current glucose, trajectory, 120-minute risk, Twin state
+* Rule-based plain-English interpretation from current glucose, trend, risk state, and horizon
+* Historical CGM chart ending at the replay timestamp
+* POC threshold line at 180 mg/dL
+* Secondary trajectory details: 15-minute change, 30-minute change, 60-minute change, slope
+* Expanders for `What BioSynth sees`, `Why this is a Digital Twin`, and `Evidence behind the prototype`
+* Guided-mode-only `What happened next?` retrospective reveal
+* POC notice that the participant is synthetic and predictions are not clinically validated
+
+Retrospective reveal boundary:
+
+* The `What happened next?` chart may show future synthetic CGM for storytelling only.
+* Future CGM is clearly separated from the model-input chart.
+* Future CGM is not passed into `BioSynthTwin`.
+
+Historical-only runtime guarantee:
+
+* At every guided or explore timestamp, the dashboard constructs `historical_cgm = CGM rows where timestamp <= replay timestamp`.
+* `BioSynthTwin.predict_state()` receives only this historical CGM slice.
+* Verification confirmed `max_runtime_input <= replay_timestamp` for guided replay checks.
+
+Pre-event vs event-underway display semantics:
+
+* While current glucose is <=180 mg/dL, the dashboard displays the runtime's pre-event model risk normally as `120-MIN RISK` with `LOW`, `ELEVATED`, or `HIGH` Twin state.
+* Once current glucose is >180 mg/dL, the dashboard no longer presents the pre-event probability as an ordinary future-risk state.
+* In the event-underway state, the judge-facing display switches to `120-MIN RISK: Event underway` and `TWIN STATE: ABOVE POC THRESHOLD`.
+* This is a UI/state-semantics correction only. It does not modify `BioSynthTwin.predict_state()`, the underlying model probability, the model thresholds, or the synthetic data.
+
+Guided replay verification:
+
+```text
+Earlier pre-event:
+  replay timestamp: 2026-01-04 12:10:00
+  current glucose: 176.5 mg/dL
+  risk probability: 0.9464
+  risk state: HIGH
+  trend: STABLE
+  max runtime input: 2026-01-04 12:10:00
+
+Closer to event:
+  replay timestamp: 2026-01-04 13:10:00
+  current glucose: 174.0 mg/dL
+  risk probability: 0.8603
+  risk state: HIGH
+  trend: FALLING
+  max runtime input: 2026-01-04 13:10:00
+
+Event/threshold region:
+  replay timestamp: 2026-01-04 13:40:00
+  current glucose: 242.2 mg/dL
+  underlying pre-event probability: 0.0000
+  displayed 120-min risk: Event underway
+  displayed Twin state: ABOVE POC THRESHOLD
+  trend: RISING
+  max runtime input: 2026-01-04 13:40:00
+```
+
+Additional verification:
+
+* `app.py` compiles successfully
+* Guided demo initializes successfully
+* Explore timeline has 2,016 rows available
+* No future CGM entered `BioSynthTwin` during verification
+* Brief headless Streamlit startup succeeded and was terminated
+
 ## Current Boundary
 
 Completed:
@@ -910,6 +1007,7 @@ Completed:
 * Synthetic participant-separated baseline model evaluation confirming trajectory signal against current glucose alone.
 * Reusable BioSynthTwin runtime, final synthetic trajectory model artifact, model metadata, and command-line demo.
 * Streamlit dashboard foundation proving `BioSynthTwin` can drive a historical-only visual replay for synthetic participant SYN-0085.
+* Guided judge-facing replay mode with event-centered navigation, retrospective future reveal separation, evidence panel, and historical-only runtime verification.
 
 Not yet completed:
 
@@ -918,4 +1016,4 @@ Not yet completed:
 
 Next step:
 
-Polish the BioSynth dashboard into the final judge-facing hackathon experience, including guided event replay, clearer risk visualization, and Digital Twin storytelling.
+Final hackathon polish: verify the complete judge demo flow, capture final screenshots/results, and prepare the concise BioSynth pitch/demo narrative.
