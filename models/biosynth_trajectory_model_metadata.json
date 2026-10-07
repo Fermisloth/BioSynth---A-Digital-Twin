@@ -1,0 +1,43 @@
+{
+  "model_type": "scikit-learn Pipeline: SimpleImputer(median) -> StandardScaler -> LogisticRegression",
+  "feature_columns": [
+    "current_glucose_mg_dl",
+    "current_is_high",
+    "history_mean_glucose",
+    "history_median_glucose",
+    "history_min_glucose",
+    "history_max_glucose",
+    "history_range_glucose",
+    "glucose_change_15m",
+    "glucose_change_30m",
+    "glucose_change_60m",
+    "glucose_slope_per_hour",
+    "history_std_glucose",
+    "history_cv_glucose",
+    "history_high_count",
+    "history_high_fraction",
+    "history_minutes_above_180",
+    "trajectory_numeric_count",
+    "trajectory_actual_history_minutes"
+  ],
+  "target": "pre_event_target",
+  "training_row_count": 198000,
+  "training_participant_count": 100,
+  "positive_rows": 23696,
+  "negative_rows": 174304,
+  "positive_rate": 0.11967676767676767,
+  "prediction_horizon_minutes": 120,
+  "history_window_minutes": 60,
+  "hyperglycemia_engineering_threshold": ">180 mg/dL",
+  "model_source": "synthetic POC population",
+  "reference_oof_pr_auc": 0.4433,
+  "reference_oof_roc_auc": 0.8539,
+  "reference_oof_note": "Reference metrics came from participant-separated out-of-fold evaluation, not from this full-data fit.",
+  "risk_state_thresholds": {
+    "LOW": "risk < 0.30",
+    "ELEVATED": "0.30 <= risk < 0.60",
+    "HIGH": "risk >= 0.60",
+    "note": "Demo display thresholds only; not clinically validated or diagnostic."
+  },
+  "clinical_validation_note": "Hackathon POC model trained on synthetic data. Not clinically validated and not intended for medical decision-making."
+}

@@ -1,0 +1,86 @@
+{
+  "source_files": {
+    "prediction_dataset": "reports\\synthetic_prediction_dataset.csv",
+    "raw_cgm_directory": "data\\02_synthetic\\cgm",
+    "participant_metadata": "data\\02_synthetic\\metadata\\synthetic_participants.csv"
+  },
+  "feature_dataset_path": "reports\\synthetic_cgm_trajectory_features.csv",
+  "row_count": 198000,
+  "participant_count": 100,
+  "feature_count": 18,
+  "feature_names": [
+    "current_glucose_mg_dl",
+    "current_is_high",
+    "history_mean_glucose",
+    "history_median_glucose",
+    "history_min_glucose",
+    "history_max_glucose",
+    "history_range_glucose",
+    "glucose_change_15m",
+    "glucose_change_30m",
+    "glucose_change_60m",
+    "glucose_slope_per_hour",
+    "history_std_glucose",
+    "history_cv_glucose",
+    "history_high_count",
+    "history_high_fraction",
+    "history_minutes_above_180",
+    "trajectory_numeric_count",
+    "trajectory_actual_history_minutes"
+  ],
+  "target_distribution": {
+    "target": "pre_event_target",
+    "positive_rows": 23696,
+    "negative_rows": 174304,
+    "positive_rate": 0.11967676767676767
+  },
+  "phenotype_distribution": {
+    "No diabetes-like": {
+      "rows": 79200,
+      "positive_rows": 144,
+      "positive_rate": 0.0018181818181818182
+    },
+    "Prediabetes-like": {
+      "rows": 59400,
+      "positive_rows": 7396,
+      "positive_rate": 0.12451178451178452
+    },
+    "T2D-like": {
+      "rows": 59400,
+      "positive_rows": 16156,
+      "positive_rate": 0.271986531986532
+    }
+  },
+  "trajectory_completeness": {
+    "rows_with_complete_60_min_history": 198000,
+    "rows_with_shorter_than_60_min_history": 0,
+    "rows_missing_current_glucose": 0,
+    "rows_where_features_could_not_be_calculated": 0,
+    "rows_with_current_glucose_disagreement": 0
+  },
+  "leakage_checks": {
+    "output_row_count_matches_prediction_dataset": true,
+    "person_id_and_prediction_timestamp_aligned": true,
+    "pre_event_target_unchanged": true,
+    "future_event_derived_features": {
+      "status": "PASS",
+      "columns": []
+    },
+    "simulator_parameters_excluded": {
+      "status": "PASS",
+      "columns": []
+    },
+    "simulator_event_ground_truth_excluded": {
+      "status": "PASS",
+      "columns": []
+    },
+    "current_glucose_agrees_with_raw_cgm": true
+  },
+  "methodology_notes": [
+    "Only raw synthetic CGM observations at or before each prediction timestamp are used.",
+    "pre_event_target is retained as the modeling label.",
+    "simulation_phenotype is retained as context metadata, not as a predictive feature.",
+    "Future/event-derived prediction columns are excluded from the feature list.",
+    "Simulator generation parameters and synthetic event ground truth are excluded from predictive features."
+  ]
+}

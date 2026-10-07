@@ -562,7 +562,7 @@ def main() -> int:
     )
     print(
         "Phenotype overlap: "
-        f"{summary['phenotype_overlap']['qualitative_conclusion']} — "
+        f"{summary['phenotype_overlap']['qualitative_conclusion']} - "
         f"{summary['phenotype_overlap']['explanation']}"
     )
     print(

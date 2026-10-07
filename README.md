@@ -500,6 +500,404 @@ Current synthetic prediction summary:
   * Prediabetes-like: 316
   * T2D-like: 906
 
+## Synthetic CGM Sanity Analysis
+
+A targeted sanity-analysis script now exists at:
+
+```text
+scripts/analyze_synthetic_cgm.py
+```
+
+It analyzes the existing generated synthetic CGM population only. It does not regenerate data, build trajectory features, train models, or use prediction labels/future information.
+
+Analysis outputs:
+
+```text
+reports/synthetic_cgm_analysis.csv
+reports/synthetic_cgm_analysis_summary.json
+reports/synthetic_cgm_sample_trajectories.png
+```
+
+Current analysis results:
+
+* Overall glucose mean/median/std: 124.86 / 114.10 / 41.32 mg/dL
+* Overall p05/p95: 82.0 / 205.2 mg/dL
+* Overall min/max: 40.0 / 400.0 mg/dL
+* Boundary clipping:
+  * Exactly 40 mg/dL: 1 observation, 0.000%
+  * Exactly 400 mg/dL: 4 observations, 0.002%
+* Phenotype mean/median and >180 rates:
+  * No diabetes-like: mean 98.41, median 94.90, >180 0.04%
+  * Prediabetes-like: mean 122.82, median 116.80, >180 4.69%
+  * T2D-like: mean 162.17, median 152.20, >180 25.12%
+* Temporal smoothness:
+  * Median absolute 5-minute change: 3.10 mg/dL
+  * 95th percentile absolute 5-minute change: 13.50 mg/dL
+  * 99th percentile absolute 5-minute change: 22.70 mg/dL
+  * Maximum absolute 5-minute change: 80.10 mg/dL
+  * 5-minute changes >20 mg/dL: 1.54%
+  * 5-minute changes >30 mg/dL: 0.43%
+  * 5-minute changes >50 mg/dL: 0.07%
+* Hyperglycemic event counts by phenotype:
+  * No diabetes-like: 6
+  * Prediabetes-like: 316
+  * T2D-like: 906
+* No diabetes-like hyperglycemia investigation:
+  * 35 readings >180 mg/dL
+  * 5 participants affected
+  * 6 events
+  * Maximum glucose among affected participants: 195.8 mg/dL
+  * Readings are spread across multiple participants/excursions rather than being caused by one extreme participant
+* Phenotype overlap:
+  * Participant-level mean glucose ranges overlap for No diabetes-like / Prediabetes-like and Prediabetes-like / T2D-like
+  * Participant-level maximum glucose ranges also overlap for both adjacent phenotype pairs
+  * Qualitative conclusion: substantial overlap
+* Event total comparison:
+  * Analysis-calculated events: 1,228
+  * Synthetic prediction-stage events: 1,228
+  * The totals agree because both use raw synthetic CGM, glucose >180 mg/dL, and a >15-minute high-reading gap to start a new event
+
+Synthetic data decision:
+
+```text
+SYNTHETIC DATA STATUS: ACCEPT FOR POC
+```
+
+## Synthetic Trajectory Feature Dataset
+
+A synthetic-only trajectory feature builder now exists at:
+
+```text
+scripts/build_synthetic_trajectory_features.py
+```
+
+It uses:
+
+```text
+reports/synthetic_prediction_dataset.csv
+data/02_synthetic/cgm/
+```
+
+Output:
+
+```text
+reports/synthetic_cgm_trajectory_features.csv
+reports/synthetic_cgm_trajectory_features_summary.json
+```
+
+Current synthetic trajectory feature results:
+
+* Rows: 198,000
+* Participants: 100
+* Target: `pre_event_target`
+* Positive rows: 23,696
+* Negative rows: 174,304
+* Positive rate: 11.97%
+* Rows by phenotype:
+  * No diabetes-like: 79,200 rows, 144 positives, 0.18% positive rate
+  * Prediabetes-like: 59,400 rows, 7,396 positives, 12.45% positive rate
+  * T2D-like: 59,400 rows, 16,156 positives, 27.20% positive rate
+* Trajectory completeness:
+  * Complete 60-minute history: 198,000 rows
+  * Short history: 0 rows
+  * Missing current glucose: 0 rows
+  * Feature calculation failures: 0 rows
+
+The feature dataset includes `person_id`, `prediction_timestamp`, `simulation_phenotype`, `pre_event_target`, and the same 18 trajectory features used for the Hall trajectory pipeline:
+
+```text
+current_glucose_mg_dl
+current_is_high
+history_mean_glucose
+history_median_glucose
+history_min_glucose
+history_max_glucose
+history_range_glucose
+glucose_change_15m
+glucose_change_30m
+glucose_change_60m
+glucose_slope_per_hour
+history_std_glucose
+history_cv_glucose
+history_high_count
+history_high_fraction
+history_minutes_above_180
+trajectory_numeric_count
+trajectory_actual_history_minutes
+```
+
+Leakage checks:
+
+* Output row count matches the synthetic prediction dataset: PASS
+* `person_id` and `prediction_timestamp` remain aligned: PASS
+* `pre_event_target` remains unchanged: PASS
+* Future/event-derived features excluded: PASS
+* Simulator-generation parameters excluded: PASS
+* Simulator event ground truth excluded: PASS
+* Current glucose agrees with raw CGM at prediction timestamp: PASS
+
+`simulation_phenotype` is retained only as context metadata and must not be used as a predictive feature.
+
+## Synthetic Participant-Separated Model Evaluation
+
+A synthetic model evaluation script now exists at:
+
+```text
+scripts/cross_validate_synthetic_models.py
+```
+
+It uses participant-separated 5-fold cross-validation with `GroupKFold(n_splits=5)`, grouping exclusively by `person_id`. Each row receives out-of-fold predictions from models that were not trained on that participant.
+
+Models compared:
+
+* Current-glucose baseline: logistic regression using only `current_glucose_mg_dl`
+* CGM trajectory model: logistic regression using the 18 CGM trajectory features
+
+Both models use median imputation, `StandardScaler`, `LogisticRegression(max_iter=2000, class_weight="balanced")`, and no threshold tuning.
+
+Outputs:
+
+```text
+reports/synthetic_model_oof_predictions.csv
+reports/synthetic_cross_validation_results.csv
+reports/synthetic_cross_validation_summary.json
+```
+
+Overall out-of-fold results:
+
+* Current-glucose baseline:
+  * PR-AUC: 0.1918
+  * ROC-AUC: 0.7303
+  * Precision @0.50: 0.2364
+  * Recall @0.50: 0.6596
+  * F1 @0.50: 0.3481
+  * Specificity @0.50: 0.7104
+  * False-positive rate @0.50: 0.2896
+* CGM trajectory model:
+  * PR-AUC: 0.4433
+  * ROC-AUC: 0.8539
+  * Precision @0.50: 0.3117
+  * Recall @0.50: 0.7773
+  * F1 @0.50: 0.4449
+  * Specificity @0.50: 0.7666
+  * False-positive rate @0.50: 0.2334
+
+Trajectory improvement:
+
+* PR-AUC absolute improvement: +0.2515
+* Relative PR-AUC improvement: +131.15%
+* ROC-AUC absolute improvement: +0.1236
+* Trajectory PR-AUC improved in 5 of 5 folds
+* Trajectory ROC-AUC improved in 5 of 5 folds
+
+Phenotype out-of-fold subgroup results:
+
+* No diabetes-like:
+  * Participants: 40
+  * Rows: 79,200
+  * Positives: 144
+  * Positive rate: 0.18%
+  * Baseline PR-AUC: 0.0112
+  * Trajectory PR-AUC: 0.0110
+  * Baseline ROC-AUC: 0.7015
+  * Trajectory ROC-AUC: 0.7109
+* Prediabetes-like:
+  * Participants: 30
+  * Rows: 59,400
+  * Positives: 7,396
+  * Positive rate: 12.45%
+  * Baseline PR-AUC: 0.1313
+  * Trajectory PR-AUC: 0.1792
+  * Baseline ROC-AUC: 0.5669
+  * Trajectory ROC-AUC: 0.6479
+* T2D-like:
+  * Participants: 30
+  * Rows: 59,400
+  * Positives: 16,156
+  * Positive rate: 27.20%
+  * Baseline PR-AUC: 0.2262
+  * Trajectory PR-AUC: 0.5782
+  * Baseline ROC-AUC: 0.4393
+  * Trajectory ROC-AUC: 0.8117
+
+Participant leakage check: PASS.
+
+`simulation_phenotype`, `person_id`, `prediction_timestamp`, simulator-generation parameters, simulator event ground truth, and future/event-derived columns were not predictive features. `simulation_phenotype` was used only after out-of-fold prediction generation for subgroup reporting.
+
+Synthetic model decision:
+
+```text
+SYNTHETIC MODEL STATUS: TRAJECTORY SIGNAL CONFIRMED
+```
+
+## BioSynth Digital Twin Runtime
+
+The accepted synthetic trajectory predictor has been converted into a reusable hackathon runtime.
+
+Final model training:
+
+```text
+scripts/train_synthetic_final_model.py
+```
+
+Runtime:
+
+```text
+src/biosynth_twin.py
+```
+
+Command-line demo:
+
+```text
+scripts/demo_digital_twin.py
+```
+
+Saved runtime artifacts:
+
+```text
+models/biosynth_trajectory_model.joblib
+models/biosynth_trajectory_model_metadata.json
+```
+
+The final model artifact is fitted on the full accepted synthetic trajectory feature dataset for deployment/demo use:
+
+* Training rows: 198,000
+* Training participants: 100
+* Positive rows: 23,696
+* Positive rate: 11.97%
+* Feature count: 18
+* Model: median imputation, `StandardScaler`, `LogisticRegression(max_iter=2000, class_weight="balanced")`
+
+Performance claims still come from participant-separated out-of-fold evaluation, not from this full-data fit:
+
+* Reference OOF PR-AUC: 0.4433
+* Reference OOF ROC-AUC: 0.8539
+
+`BioSynthTwin` runtime input:
+
+```text
+timestamp
+glucose_value_mg_dl
+```
+
+The runtime computes the same 18 trajectory features from historical CGM only and returns a dictionary containing:
+
+* `prediction_timestamp`
+* `current_glucose_mg_dl`
+* `glucose_state`
+* `glucose_change_15m`
+* `glucose_change_30m`
+* `glucose_change_60m`
+* `glucose_slope_per_hour`
+* `trend`
+* `hyperglycemia_risk`
+* `risk_state`
+* `prediction_horizon_minutes`
+* `history_window_minutes`
+* `history_observation_count`
+
+Risk-state display thresholds:
+
+* `LOW`: risk < 0.30
+* `ELEVATED`: 0.30 <= risk < 0.60
+* `HIGH`: risk >= 0.60
+
+Current glucose display states:
+
+* `BELOW_RANGE`: glucose < 70
+* `IN_RANGE`: 70 <= glucose <= 180
+* `ABOVE_180`: glucose > 180
+
+Trend display states:
+
+* `RAPIDLY FALLING`
+* `FALLING`
+* `STABLE`
+* `RISING`
+* `RAPIDLY RISING`
+
+These are demo/engineering display states, not clinical diagnostic thresholds.
+
+Safety boundary:
+
+* The runtime parses and sorts timestamps, coerces glucose to numeric, rejects empty or invalid input, and uses only CGM observations at or before the requested prediction timestamp.
+* `BioSynthTwin` does not require phenotype, simulator parameters, future CGM, event labels, or simulator event ground truth.
+
+Successful command-line demo:
+
+```text
+Participant:           SYN-0085
+Prediction time:       2026-01-04 12:10:00
+Current glucose:       176.5 mg/dL
+Glucose state:         IN_RANGE
+Trend:                 STABLE
+15-min change:         +1.2 mg/dL
+30-min change:         -15.1 mg/dL
+60-min change:         +8.2 mg/dL
+Slope:                 +5.5 mg/dL/hour
+Hyperglycemia risk:    94.6%
+Risk state:            HIGH
+Prediction horizon:    120 min
+```
+
+The model and runtime remain a synthetic-data hackathon POC and are not clinically validated.
+
+## Streamlit Dashboard Foundation
+
+A local Streamlit dashboard foundation now exists at:
+
+```text
+app.py
+```
+
+This first dashboard version uses the established synthetic virtual participant:
+
+```text
+SYN-0085
+```
+
+Dashboard behavior:
+
+* Loads `data/02_synthetic/cgm/SYN-0085.csv`
+* Provides a timeline slider through the participant's CGM record
+* At the selected timestamp, passes only CGM observations at or before that timestamp into `BioSynthTwin`
+* Calls the real runtime in `src/biosynth_twin.py`
+* Displays the current Digital Twin state and 120-minute hyperglycemia risk
+* Shows a recent historical CGM chart ending at the selected timestamp
+* Includes the 180 mg/dL POC hyperglycemia engineering threshold in the chart
+* Includes a visible notice that the demo uses synthetic virtual participants and is not clinically validated
+
+Currently displayed state:
+
+* Current glucose
+* Glucose state
+* Trend
+* Hyperglycemia risk
+* Risk state
+* Prediction horizon
+* 15-minute glucose change
+* 30-minute glucose change
+* 60-minute glucose change
+* Glucose slope
+
+Verification result:
+
+* Streamlit available in `.venv`: version 1.64.0
+* `app.py` compiles successfully
+* `BioSynthTwin` loads successfully
+* `SYN-0085` loads successfully with 2,016 CGM rows
+* Timeline contains data
+* Runtime prediction can be produced
+* Runtime risk is within 0-1
+* Verification passed with 0 future CGM rows passed into the runtime
+* Brief headless Streamlit startup succeeded and was terminated
+
+Launch command:
+
+```powershell
+.\.venv\Scripts\streamlit.exe run app.py
+```
+
 ## Current Boundary
 
 Completed:
@@ -507,10 +905,17 @@ Completed:
 * Real Hall 2018 validation, target construction, trajectory features, participant-level cross-validation, and event-level reporting.
 * First synthetic raw-CGM generation layer.
 * Synthetic hyperglycemic-event detection and early-warning prediction dataset construction.
+* Synthetic CGM sanity analysis with participant-level statistics, event-structure checks, phenotype-overlap review, and representative trajectory visualization.
+* Synthetic leakage-safe CGM trajectory feature dataset with the same 18 feature names as the Hall trajectory pipeline.
+* Synthetic participant-separated baseline model evaluation confirming trajectory signal against current glucose alone.
+* Reusable BioSynthTwin runtime, final synthetic trajectory model artifact, model metadata, and command-line demo.
+* Streamlit dashboard foundation proving `BioSynthTwin` can drive a historical-only visual replay for synthetic participant SYN-0085.
 
 Not yet completed:
 
-* Synthetic feature generation
-* Model training on synthetic data
 * Digital Twin UI integration
 * Sensor gaps or missing-data simulation
+
+Next step:
+
+Polish the BioSynth dashboard into the final judge-facing hackathon experience, including guided event replay, clearer risk visualization, and Digital Twin storytelling.
