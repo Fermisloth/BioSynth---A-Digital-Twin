@@ -1,0 +1,87 @@
+{
+  "dataset": {
+    "prediction_file": "reports\\hall2018_baseline_oof_predictions.csv",
+    "rows": 89329,
+    "positive_rows": 1662,
+    "negative_rows": 87667,
+    "base_positive_rate": 0.018605380111721838
+  },
+  "prediction_column": "trajectory_probability",
+  "threshold_grid": {
+    "start": 0.01,
+    "end": 0.5,
+    "step": 0.01
+  },
+  "best_thresholds": {
+    "best_f1": {
+      "threshold": 0.5,
+      "total_rows": 89329.0,
+      "actual_positive_rows": 1662.0,
+      "actual_negative_rows": 87667.0,
+      "predicted_alert_rows": 23091.0,
+      "predicted_non_alert_rows": 66238.0,
+      "true_positives": 1083.0,
+      "false_positives": 22008.0,
+      "true_negatives": 65659.0,
+      "false_negatives": 579.0,
+      "precision": 0.046901390152007276,
+      "recall": 0.6516245487364621,
+      "f1": 0.08750454490364805,
+      "specificity": 0.7489591294329679,
+      "false_positive_rate": 0.25104087056703206,
+      "alert_rate": 0.25849388216592595,
+      "capture_rate": 0.6516245487364621,
+      "lift_vs_base_rate": 2.520850951196545
+    },
+    "best_precision": {
+      "threshold": 0.5,
+      "total_rows": 89329.0,
+      "actual_positive_rows": 1662.0,
+      "actual_negative_rows": 87667.0,
+      "predicted_alert_rows": 23091.0,
+      "predicted_non_alert_rows": 66238.0,
+      "true_positives": 1083.0,
+      "false_positives": 22008.0,
+      "true_negatives": 65659.0,
+      "false_negatives": 579.0,
+      "precision": 0.046901390152007276,
+      "recall": 0.6516245487364621,
+      "f1": 0.08750454490364805,
+      "specificity": 0.7489591294329679,
+      "false_positive_rate": 0.25104087056703206,
+      "alert_rate": 0.25849388216592595,
+      "capture_rate": 0.6516245487364621,
+      "lift_vs_base_rate": 2.520850951196545
+    },
+    "best_recall": {
+      "threshold": 0.01,
+      "total_rows": 89329.0,
+      "actual_positive_rows": 1662.0,
+      "actual_negative_rows": 87667.0,
+      "predicted_alert_rows": 88416.0,
+      "predicted_non_alert_rows": 913.0,
+      "true_positives": 1662.0,
+      "false_positives": 86754.0,
+      "true_negatives": 913.0,
+      "false_negatives": 0.0,
+      "precision": 0.018797502714440827,
+      "recall": 1.0,
+      "f1": 0.036901352161460066,
+      "specificity": 0.010414409070687945,
+      "false_positive_rate": 0.9895855909293121,
+      "alert_rate": 0.9897793549687112,
+      "capture_rate": 1.0,
+      "lift_vs_base_rate": 1.010326185305827
+    },
+    "best_recall_at_5_percent_precision": null,
+    "best_recall_at_10_percent_precision": null
+  },
+  "methodology_notes": [
+    "Threshold analysis uses participant-level out-of-fold predictions.",
+    "No model retraining occurs in this script.",
+    "Threshold-dependent metrics are descriptive operating-point analysis.",
+    "The underlying positive rate is approximately 1.86%.",
+    "Lift compares precision at a threshold against the overall positive rate.",
+    "This analysis does not establish a clinical alert threshold."
+  ]
+}
