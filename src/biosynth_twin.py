@@ -8,14 +8,31 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from scripts.build_ehr_cgm_fusion_features import EHR_FEATURES
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MODEL_PATH = PROJECT_ROOT / "models" / "biosynth_trajectory_model.joblib"
 DEFAULT_METADATA_PATH = PROJECT_ROOT / "models" / "biosynth_trajectory_model_metadata.json"
+DEFAULT_FUSION_MODEL_PATH = PROJECT_ROOT / "models" / "biosynth_ehr_cgm_fusion_model.joblib"
+DEFAULT_FUSION_METADATA_PATH = PROJECT_ROOT / "models" / "biosynth_ehr_cgm_fusion_metadata.json"
 
 HIGH_THRESHOLD_MG_DL = 180.0
 HISTORY_WINDOW_MINUTES = 60
 PREDICTION_HORIZON_MINUTES = 120
+MODEL_MODE_CGM_ONLY = "CGM_ONLY"
+MODEL_MODE_EHR_CGM_FUSION = "EHR_CGM_FUSION"
+
+EHR_PROFILE_FIELDS = [
+    "age_years",
+    "sex",
+    "bmi_kg_m2",
+    "hba1c_percent",
+    "fasting_glucose_mg_dl",
+    "family_history_diabetes",
+    "hypertension_history",
+    "activity_level",
+]
 
 
 class BioSynthTwin:
@@ -31,7 +48,17 @@ class BioSynthTwin:
         self,
         model_path: str | Path = DEFAULT_MODEL_PATH,
         metadata_path: str | Path = DEFAULT_METADATA_PATH,
+        model_mode: str = MODEL_MODE_CGM_ONLY,
     ) -> None:
+        self.model_mode = model_mode.upper()
+        if self.model_mode == MODEL_MODE_EHR_CGM_FUSION and model_path == DEFAULT_MODEL_PATH:
+            model_path = DEFAULT_FUSION_MODEL_PATH
+            metadata_path = DEFAULT_FUSION_METADATA_PATH
+        if self.model_mode not in {MODEL_MODE_CGM_ONLY, MODEL_MODE_EHR_CGM_FUSION}:
+            raise ValueError(
+                "model_mode must be either 'CGM_ONLY' or 'EHR_CGM_FUSION'."
+            )
+
         self.model_path = Path(model_path)
         self.metadata_path = Path(metadata_path)
 
@@ -45,13 +72,23 @@ class BioSynthTwin:
             self.metadata = json.load(handle)
 
         self.feature_columns = list(self.metadata["feature_columns"])
-        if len(self.feature_columns) != 18:
-            raise ValueError("Expected exactly 18 model features.")
+        expected_feature_count = 29 if self.model_mode == MODEL_MODE_EHR_CGM_FUSION else 18
+        if len(self.feature_columns) != expected_feature_count:
+            raise ValueError(
+                f"Expected exactly {expected_feature_count} model features for {self.model_mode}."
+            )
+        if self.model_mode == MODEL_MODE_EHR_CGM_FUSION:
+            metadata_mode = self.metadata.get("model_mode")
+            if metadata_mode != MODEL_MODE_EHR_CGM_FUSION:
+                raise ValueError("Fusion runtime requires EHR_CGM_FUSION model metadata.")
+            if list(self.metadata.get("ehr_feature_columns", [])) != EHR_FEATURES:
+                raise ValueError("Fusion model EHR feature order does not match runtime encoder.")
 
     def predict_state(
         self,
         cgm_history: pd.DataFrame | list[dict[str, Any]],
         prediction_timestamp: str | pd.Timestamp | None = None,
+        ehr_profile: dict[str, Any] | pd.Series | None = None,
     ) -> dict[str, Any]:
         history = self._prepare_history(cgm_history)
         if prediction_timestamp is None:
@@ -66,11 +103,22 @@ class BioSynthTwin:
             raise ValueError("No CGM observations exist at or before prediction_timestamp.")
 
         features = self._calculate_features(historical, prediction_time)
+        if self.model_mode == MODEL_MODE_EHR_CGM_FUSION:
+            if ehr_profile is None:
+                raise ValueError(
+                    "EHR_CGM_FUSION mode requires an explicit static EHR profile. "
+                    "Supply age_years, sex, bmi_kg_m2, hba1c_percent, "
+                    "fasting_glucose_mg_dl, family_history_diabetes, "
+                    "hypertension_history, and activity_level."
+                )
+            features.update(self._encode_ehr_profile(ehr_profile))
+
         feature_frame = pd.DataFrame([{column: features[column] for column in self.feature_columns}])
         risk = float(self.model.predict_proba(feature_frame)[:, 1][0])
 
         current_glucose = features["current_glucose_mg_dl"]
         return {
+            "model_mode": self.model_mode,
             "prediction_timestamp": prediction_time.isoformat(sep=" "),
             "current_glucose_mg_dl": current_glucose,
             "glucose_state": self._glucose_state(current_glucose),
@@ -86,6 +134,7 @@ class BioSynthTwin:
             "history_observation_count": int(features["trajectory_numeric_count"]),
             "trajectory_actual_history_minutes": features["trajectory_actual_history_minutes"],
             "feature_count": len(self.feature_columns),
+            "feature_order": list(self.feature_columns),
             "poc_notice": "Synthetic-data hackathon POC. Not clinically validated.",
         }
 
@@ -167,6 +216,64 @@ class BioSynthTwin:
             "trajectory_numeric_count": int(len(window)),
             "trajectory_actual_history_minutes": actual_history_minutes,
         }
+
+    @staticmethod
+    def _encode_ehr_profile(ehr_profile: dict[str, Any] | pd.Series) -> dict[str, float | int]:
+        if isinstance(ehr_profile, pd.Series):
+            profile = ehr_profile.to_dict()
+        else:
+            profile = dict(ehr_profile)
+
+        missing = [field for field in EHR_PROFILE_FIELDS if field not in profile or pd.isna(profile[field])]
+        if missing:
+            raise ValueError(
+                "EHR_CGM_FUSION mode is missing required static EHR fields: "
+                + ", ".join(missing)
+            )
+
+        sex = str(profile["sex"]).strip().lower()
+        if sex not in {"female", "male"}:
+            raise ValueError("EHR_CGM_FUSION sex must be 'female' or 'male'.")
+
+        activity_level = str(profile["activity_level"]).strip().lower()
+        if activity_level not in {"low", "moderate", "high"}:
+            raise ValueError("EHR_CGM_FUSION activity_level must be 'low', 'moderate', or 'high'.")
+
+        encoded = {
+            "ehr_age_years": float(profile["age_years"]),
+            "ehr_bmi_kg_m2": float(profile["bmi_kg_m2"]),
+            "ehr_hba1c_percent": float(profile["hba1c_percent"]),
+            "ehr_fasting_glucose_mg_dl": float(profile["fasting_glucose_mg_dl"]),
+            "ehr_family_history_diabetes": BioSynthTwin._coerce_bool_feature(
+                profile["family_history_diabetes"], "family_history_diabetes"
+            ),
+            "ehr_hypertension_history": BioSynthTwin._coerce_bool_feature(
+                profile["hypertension_history"], "hypertension_history"
+            ),
+            "ehr_sex_female": int(sex == "female"),
+            "ehr_sex_male": int(sex == "male"),
+            "ehr_activity_low": int(activity_level == "low"),
+            "ehr_activity_moderate": int(activity_level == "moderate"),
+            "ehr_activity_high": int(activity_level == "high"),
+        }
+
+        if list(encoded) != EHR_FEATURES:
+            raise ValueError("Runtime EHR encoding order does not match fusion feature builder.")
+        return encoded
+
+    @staticmethod
+    def _coerce_bool_feature(value: Any, field_name: str) -> int:
+        if isinstance(value, (bool, np.bool_)):
+            return int(value)
+        if isinstance(value, (int, np.integer)) and value in {0, 1}:
+            return int(value)
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {"true", "1", "yes", "y"}:
+                return 1
+            if normalized in {"false", "0", "no", "n"}:
+                return 0
+        raise ValueError(f"EHR_CGM_FUSION {field_name} must be boolean-like.")
 
     @staticmethod
     def _change_at(window: pd.DataFrame, prediction_time: pd.Timestamp, minutes: int) -> float:

@@ -12,10 +12,25 @@ from src.biosynth_twin import BioSynthTwin
 PROJECT_ROOT = Path(__file__).resolve().parent
 PARTICIPANT_ID = "SYN-0085"
 CGM_PATH = PROJECT_ROOT / "data" / "02_synthetic" / "cgm" / f"{PARTICIPANT_ID}.csv"
+EHR_PATH = PROJECT_ROOT / "data" / "02_synthetic" / "ehr" / "synthetic_ehr.csv"
 EVENTS_PATH = PROJECT_ROOT / "reports" / "synthetic_detected_hyperglycemic_events.csv"
+FUSION_MODEL_PATH = PROJECT_ROOT / "models" / "biosynth_ehr_cgm_fusion_model.joblib"
+FUSION_METADATA_PATH = PROJECT_ROOT / "models" / "biosynth_ehr_cgm_fusion_metadata.json"
 ENGINEERING_THRESHOLD = 180.0
 DEMO_EVENT_ID = "SYN-0085-0-32"
 GUIDED_OFFSETS_MINUTES = [-90, -60, -30, -10, 0, 30, 60]
+FUSION_MODE_LABEL = "EHR + CGM Fusion"
+CGM_ONLY_MODE_LABEL = "CGM Only"
+REQUIRED_EHR_FIELDS = [
+    "age_years",
+    "sex",
+    "bmi_kg_m2",
+    "hba1c_percent",
+    "fasting_glucose_mg_dl",
+    "family_history_diabetes",
+    "hypertension_history",
+    "activity_level",
+]
 
 
 st.set_page_config(
@@ -26,7 +41,13 @@ st.set_page_config(
 
 
 @st.cache_resource
-def load_twin() -> BioSynthTwin:
+def load_twin(model_mode: str) -> BioSynthTwin:
+    if model_mode == "EHR_CGM_FUSION":
+        if not FUSION_MODEL_PATH.exists():
+            raise FileNotFoundError(f"Fusion model artifact not found: {FUSION_MODEL_PATH}")
+        if not FUSION_METADATA_PATH.exists():
+            raise FileNotFoundError(f"Fusion model metadata not found: {FUSION_METADATA_PATH}")
+        return BioSynthTwin(model_mode="EHR_CGM_FUSION")
     return BioSynthTwin()
 
 
@@ -51,6 +72,29 @@ def load_cgm() -> pd.DataFrame:
         raise ValueError("Participant CGM file has no valid timestamped glucose readings.")
 
     return cgm.sort_values("timestamp").reset_index(drop=True)
+
+
+@st.cache_data
+def load_ehr_profile() -> dict:
+    if not EHR_PATH.exists():
+        raise FileNotFoundError(f"Synthetic EHR file not found: {EHR_PATH}")
+
+    ehr = pd.read_csv(EHR_PATH)
+    if "person_id" not in ehr.columns:
+        raise ValueError("Synthetic EHR file is missing column: person_id")
+
+    profile_rows = ehr.loc[ehr["person_id"].astype(str) == PARTICIPANT_ID]
+    if profile_rows.empty:
+        raise ValueError(f"Synthetic EHR record not found for {PARTICIPANT_ID}.")
+    if len(profile_rows) > 1:
+        raise ValueError(f"Synthetic EHR record is duplicated for {PARTICIPANT_ID}.")
+
+    profile = profile_rows.iloc[0].to_dict()
+    missing = [field for field in REQUIRED_EHR_FIELDS if field not in profile or pd.isna(profile[field])]
+    if missing:
+        raise ValueError(f"Synthetic EHR profile is missing required fields: {missing}")
+
+    return profile
 
 
 @st.cache_data
@@ -94,6 +138,57 @@ def risk_color(risk_state: str) -> str:
 
 def render_metric_card(label: str, value: str, help_text: str | None = None) -> None:
     st.metric(label=label, value=value, help=help_text)
+
+
+def yes_no(value: object) -> str:
+    if isinstance(value, str):
+        return "Yes" if value.strip().lower() in {"true", "1", "yes", "y"} else "No"
+    return "Yes" if bool(value) else "No"
+
+
+def render_health_profile(ehr_profile: dict) -> None:
+    with st.container(border=True):
+        st.markdown("### Synthetic health profile")
+        st.caption("Static synthetic EHR profile for this virtual participant. Not a real medical record.")
+        p1, p2, p3, p4 = st.columns(4)
+        with p1:
+            st.metric("Age", f"{int(ehr_profile['age_years'])} years")
+            st.metric("Sex", str(ehr_profile["sex"]).title())
+        with p2:
+            st.metric("BMI", f"{float(ehr_profile['bmi_kg_m2']):.1f} kg/m²")
+            st.metric("HbA1c", f"{float(ehr_profile['hba1c_percent']):.1f}%")
+        with p3:
+            st.metric("Fasting glucose", f"{float(ehr_profile['fasting_glucose_mg_dl']):.0f} mg/dL")
+            st.metric("Activity level", str(ehr_profile["activity_level"]).title())
+        with p4:
+            st.metric("Family history", yes_no(ehr_profile["family_history_diabetes"]))
+            st.metric("Hypertension history", yes_no(ehr_profile["hypertension_history"]))
+
+
+def render_model_flow(model_label: str) -> None:
+    with st.container(border=True):
+        if model_label == FUSION_MODE_LABEL:
+            st.markdown("**Static EHR + Live CGM Replay**")
+            st.markdown("↓")
+            st.markdown("**EHR + CGM Fusion**")
+            st.markdown("↓")
+            st.markdown("**120-Min Risk State**")
+            st.write(
+                "BioSynth combines a virtual participant's static health profile with "
+                "their recent glucose trajectory to estimate whether a new glucose "
+                "excursion above 180 mg/dL may begin within the next 120 minutes."
+            )
+        else:
+            st.markdown("**Live CGM Replay**")
+            st.markdown("↓")
+            st.markdown("**CGM Trajectory Model**")
+            st.markdown("↓")
+            st.markdown("**120-Min Risk State**")
+            st.write(
+                "BioSynth is using only the recent glucose trajectory in this mode. "
+                "The synthetic health profile is shown for context but is not passed "
+                "to the CGM-only model."
+            )
 
 
 def state_interpretation(state: dict) -> str:
@@ -233,6 +328,7 @@ def render_primary_state(state: dict) -> None:
             """,
             unsafe_allow_html=True,
         )
+    st.caption(f"Runtime model mode: `{state['model_mode']}`")
 
 
 def judge_display_state(state: dict) -> dict[str, str]:
@@ -279,19 +375,32 @@ def main() -> None:
     )
     st.caption(f"Synthetic Virtual Participant — {PARTICIPANT_ID}")
 
+    model_label = st.segmented_control(
+        "Model mode",
+        [FUSION_MODE_LABEL, CGM_ONLY_MODE_LABEL],
+        default=FUSION_MODE_LABEL,
+    )
+    runtime_mode = "EHR_CGM_FUSION" if model_label == FUSION_MODE_LABEL else "CGM_ONLY"
+
     try:
-        twin = load_twin()
+        twin = load_twin(runtime_mode)
         cgm = load_cgm()
+        ehr_profile = load_ehr_profile()
         event = load_demo_event()
     except Exception as exc:
         st.error(f"Could not start BioSynth dashboard: {exc}")
         return
 
-    mode = st.radio(
+    top_left, top_right = st.columns([1.35, 1])
+    with top_left:
+        render_model_flow(model_label)
+    with top_right:
+        render_health_profile(ehr_profile)
+
+    mode = st.segmented_control(
         "Replay mode",
         ["GUIDED DEMO", "EXPLORE TIMELINE"],
-        horizontal=True,
-        index=0,
+        default="GUIDED DEMO",
     )
 
     if mode == "GUIDED DEMO":
@@ -303,10 +412,10 @@ def main() -> None:
         )
         b1, b2, b3 = st.columns([1, 1, 4])
         with b1:
-            if st.button("Previous", use_container_width=True):
+            if st.button("Previous", width="stretch"):
                 st.session_state.guided_step = max(0, st.session_state.guided_step - 1)
         with b2:
-            if st.button("Next", use_container_width=True):
+            if st.button("Next", width="stretch"):
                 st.session_state.guided_step = min(
                     len(timestamps) - 1,
                     st.session_state.guided_step + 1,
@@ -342,7 +451,14 @@ def main() -> None:
         return
 
     try:
-        state = twin.predict_state(historical_cgm, prediction_time)
+        if runtime_mode == "EHR_CGM_FUSION":
+            state = twin.predict_state(
+                historical_cgm,
+                prediction_time,
+                ehr_profile=ehr_profile,
+            )
+        else:
+            state = twin.predict_state(historical_cgm, prediction_time)
     except Exception as exc:
         st.error(f"BioSynthTwin could not produce a state at this timestamp: {exc}")
         return
@@ -366,11 +482,18 @@ def main() -> None:
         st.write(f"Historical rows passed to runtime: `{len(historical_cgm):,}`")
 
     with st.expander("What BioSynth sees"):
-        st.write(
-            "BioSynth receives recent CGM trajectory information such as current glucose, "
-            "recent changes, recent average/range, variability, and time spent above the "
-            "POC threshold."
-        )
+        if runtime_mode == "EHR_CGM_FUSION":
+            st.write(
+                "BioSynth receives recent CGM trajectory information plus the static "
+                "synthetic EHR profile shown above. The fusion model consumes all 29 "
+                "features in the saved model metadata order."
+            )
+        else:
+            st.write(
+                "BioSynth receives recent CGM trajectory information such as current glucose, "
+                "recent changes, recent average/range, variability, and time spent above the "
+                "POC threshold."
+            )
         st.write("BioSynth does not receive future glucose values when making a prediction.")
 
     with st.expander("Why this is a Digital Twin"):
@@ -397,12 +520,22 @@ def main() -> None:
             - 100 virtual participants
             - 198,000 prediction moments
             - Current-glucose baseline PR-AUC = 0.1918
+            - Current-glucose baseline ROC-AUC = 0.7303
             - Trajectory PR-AUC = 0.4433
+            - Trajectory ROC-AUC = 0.8539
+            - EHR + CGM fusion PR-AUC = 0.4352
+            - EHR + CGM fusion ROC-AUC = 0.8729
             - Relative improvement = +131.15%
             - Trajectory PR-AUC improved in 5/5 folds
 
+            Fusion produced mixed results on synthetic participant-separated evaluation:
+            ROC-AUC and precision improved, while overall PR-AUC declined slightly.
+
             These experiments support the POC hypothesis that recent CGM trajectory contains
             more predictive signal than the current glucose value alone.
+
+            Hall 2018 is real-world evidence for trajectory signal only; it did not validate
+            the synthetic EHR + CGM fusion model.
             """
         )
 

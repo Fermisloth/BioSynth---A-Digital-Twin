@@ -1111,7 +1111,215 @@ Fusion verification:
 * Forbidden columns in `FUSION_FEATURES`: none
 * All fusion features numeric: PASS
 
-No EHR + CGM fusion model has been trained yet. Because the EHR values are synthetic and aligned with simulator phenotypes, any future fusion gain may reflect simulator structure rather than genuine clinical utility.
+No EHR + CGM fusion model artifact has been trained yet. Because the EHR values are synthetic and aligned with simulator phenotypes, any future fusion gain may reflect simulator structure rather than genuine clinical utility.
+
+## Synthetic EHR + CGM Fusion Model Evaluation
+
+The EHR + CGM fusion model has been evaluated with the same participant-separated approach used for the existing synthetic CGM-only evaluation.
+
+Evaluation script:
+
+```text
+scripts/cross_validate_ehr_cgm_fusion.py
+```
+
+Outputs:
+
+```text
+reports/ehr_cgm_fusion_oof_predictions.csv
+reports/ehr_cgm_fusion_cross_validation_results.csv
+reports/ehr_cgm_fusion_cross_validation_summary.json
+```
+
+Method:
+
+* Model: `LogisticRegression(class_weight="balanced", max_iter=2000)`
+* Preprocessing: median imputation and `StandardScaler`
+* Cross-validation: 5-fold `GroupKFold`
+* Grouping: `person_id`
+* Evaluation: out-of-fold predictions only
+* Preprocessing scope: imputer and scaler fitted inside each training fold only
+* Identical participant folds used for all three models
+
+Model comparison:
+
+* Current-glucose baseline: 1 feature
+* CGM trajectory: 18 features
+* EHR + CGM fusion: 29 features
+
+Overall out-of-fold metrics:
+
+| Model | PR-AUC | ROC-AUC | Precision @0.50 | Recall @0.50 | F1 @0.50 | Specificity @0.50 | FPR @0.50 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Current-glucose baseline | 0.1918 | 0.7303 | 0.2364 | 0.6596 | 0.3481 | 0.7104 | 0.2896 |
+| CGM trajectory | 0.4433 | 0.8539 | 0.3117 | 0.7773 | 0.4449 | 0.7666 | 0.2334 |
+| EHR + CGM fusion | 0.4352 | 0.8729 | 0.3421 | 0.7749 | 0.4746 | 0.7974 | 0.2026 |
+
+Fusion vs CGM trajectory:
+
+* PR-AUC delta: -0.0081
+* ROC-AUC delta: +0.0190
+* Relative PR-AUC change: -1.83%
+* PR-AUC improved folds: 4/5
+* ROC-AUC improved folds: 5/5
+* Result interpretation: MIXED RESULTS
+
+Leakage checks:
+
+* No participant appears in both train and validation within a fold: PASS
+* No future CGM predictive features: PASS
+* No event labels as predictive features: PASS
+* `simulation_phenotype` not used as a model input: PASS
+* `person_id` not used as a model input: PASS
+* No simulator ground-truth parameters as model inputs: PASS
+* Preprocessing trained within each fold only: PASS
+
+Interpretation:
+
+The fusion model improves ROC-AUC overall and in every fold, and improves PR-AUC in 4 of 5 folds. However, overall out-of-fold PR-AUC is slightly lower than the CGM trajectory model alone, so the result should be reported as mixed rather than a clear fusion win. This remains a synthetic two-stream POC, not independent clinical validation or clinically validated personalization.
+
+## Final EHR + CGM Fusion Runtime Artifact
+
+The final full-data EHR + CGM fusion model artifact now exists for runtime use. It is trained on all 198,000 synthetic fusion rows, but its recorded performance references remain the participant-separated out-of-fold metrics above rather than training-set scores.
+
+Training script:
+
+```text
+scripts/train_ehr_cgm_final_model.py
+```
+
+Artifacts:
+
+```text
+models/biosynth_ehr_cgm_fusion_model.joblib
+models/biosynth_ehr_cgm_fusion_metadata.json
+```
+
+Runtime modes:
+
+* `CGM_ONLY`: default backward-compatible mode using the existing 18-feature CGM trajectory model.
+* `EHR_CGM_FUSION`: explicit fusion mode using 18 CGM trajectory features plus 11 encoded EHR features.
+
+Runtime API:
+
+```python
+from src.biosynth_twin import BioSynthTwin
+
+cgm_only_twin = BioSynthTwin()
+cgm_state = cgm_only_twin.predict_state(cgm_history, prediction_timestamp)
+
+fusion_twin = BioSynthTwin(model_mode="EHR_CGM_FUSION")
+fusion_state = fusion_twin.predict_state(
+    cgm_history,
+    prediction_timestamp,
+    ehr_profile=static_ehr_profile,
+)
+```
+
+Static EHR profile requirements for fusion mode:
+
+* `age_years`
+* `sex`
+* `bmi_kg_m2`
+* `hba1c_percent`
+* `fasting_glucose_mg_dl`
+* `family_history_diabetes`
+* `hypertension_history`
+* `activity_level`
+
+Fusion mode requires the EHR profile to be supplied explicitly. It does not silently look up EHR from `person_id`, and it does not fall back to CGM-only prediction when EHR is missing.
+
+Runtime verification:
+
+* Existing CGM-only demo still runs successfully with 18 features.
+* Fusion model artifact and metadata load successfully.
+* SYN-0085 static EHR record loads successfully.
+* SYN-0085 fusion inference at `2026-01-04 12:10:00` succeeds using CGM at or before that timestamp.
+* SYN-0085 fusion probability: 0.9281
+* SYN-0085 fusion risk state: HIGH
+* Fusion runtime feature count: 29
+* Fusion runtime feature order matches saved metadata: PASS
+* Missing EHR raises a clear error: PASS
+* Existing CGM-only artifact remains separate from the fusion artifact.
+* Both modes use the established `pre_event_target` 120-minute target definition.
+
+Scientific limitation:
+
+The fusion artifact is a synthetic hackathon POC. Static EHR values were generated from phenotype-aligned simulator metadata, and CGM trajectories were also phenotype-influenced. The mixed validation finding should be reported honestly: fusion improved ROC-AUC but slightly reduced overall PR-AUC compared with the CGM-only trajectory model.
+
+## Streamlit Two-Stream Fusion Dashboard
+
+The Streamlit Digital Twin dashboard now demonstrates genuine two-stream inference for SYN-0085.
+
+Dashboard integration:
+
+* Default model mode: `EHR + CGM Fusion`
+* Alternate model mode: `CGM Only`
+* Fusion runtime call: `BioSynthTwin(model_mode="EHR_CGM_FUSION")`
+* CGM-only runtime call: `BioSynthTwin()`
+* Fusion prediction input: historical CGM at or before the replay timestamp plus the static SYN-0085 synthetic EHR profile.
+* CGM-only prediction input: historical CGM at or before the replay timestamp only.
+
+Dashboard additions:
+
+* Model-mode selector for `EHR + CGM Fusion` and `CGM Only`.
+* Clearly labeled synthetic health profile showing age, sex, BMI, HbA1c, fasting glucose, family history, hypertension history, and activity level from `data/02_synthetic/ehr/synthetic_ehr.csv`.
+* Mode-aware flow explanation for static EHR plus live CGM replay versus CGM-only trajectory replay.
+* Evidence panel updated with current-glucose, CGM trajectory, and EHR + CGM fusion metrics.
+* Hall 2018 evidence remains separately labeled and is not presented as fusion validation.
+
+Dashboard verification:
+
+* `app.py` compiles successfully.
+* Fusion mode is the dashboard default.
+* SYN-0085 EHR profile loads exactly one static record.
+* Static EHR values remain unchanged as the replay timestamp advances.
+* Fusion mode passes the EHR profile into `BioSynthTwin.predict_state(...)`.
+* CGM-only mode still works.
+* Guided replay still works.
+* Explore timeline path remains available.
+* No future CGM enters either runtime mode.
+* At `2026-01-04 12:10:00`, CGM-only risk is approximately 0.9464 and fusion risk is approximately 0.9281, with current glucose approximately 176.5 mg/dL.
+* At the `2026-01-04 13:40:00` event timestamp, both modes display `Event underway` and `ABOVE POC THRESHOLD`.
+* Brief headless Streamlit startup succeeded on local port 8502 with HTTP 200 and was terminated safely.
+
+The dashboard still reports the mixed fusion validation finding: ROC-AUC and precision improved, while overall PR-AUC declined slightly versus the CGM trajectory model. No clinical accuracy or clinical personalization claim is made.
+
+## Final Architecture Documentation
+
+The final BioSynth architecture documentation now exists as both Markdown and PDF.
+
+Artifacts:
+
+```text
+docs/BIOSYNTH_ARCHITECTURE.md
+docs/BIOSYNTH_ARCHITECTURE.pdf
+```
+
+The architecture diagram separates:
+
+* Offline training and participant-separated evaluation.
+* Live replay and historical-only runtime inference.
+* Static synthetic EHR feature encoding.
+* Dynamic synthetic CGM trajectory feature generation.
+* EHR + CGM fusion model path.
+* CGM-only comparison baseline.
+* BioSynthTwin runtime and Streamlit dashboard output.
+
+The PDF explicitly documents the target definition: a new glucose excursion above 180 mg/dL beginning within the next 120 minutes. It also records the mixed synthetic evaluation result:
+
+* CGM trajectory: PR-AUC 0.4433, ROC-AUC 0.8539
+* EHR + CGM fusion: PR-AUC 0.4352, ROC-AUC 0.8729
+* Result label: MIXED
+
+The documentation distinguishes Hall 2018 real CGM proof-of-signal from synthetic CGM training data and synthetic EHR records. It does not present Hall 2018 as validation for EHR + CGM fusion.
+
+PDF verification:
+
+* PDF exists and opens with Poppler `pdfinfo`.
+* PDF has 2 pages, is not encrypted, and uses landscape letter layout.
+* Both pages were rendered to PNG for visual inspection.
+* The architecture diagram is readable with no clipped or overlapping diagram elements after correction.
 
 ## Current Boundary
 
@@ -1128,13 +1336,15 @@ Completed:
 * Guided judge-facing replay mode with event-centered navigation, retrospective future reveal separation, evidence panel, and historical-only runtime verification.
 * Synthetic static EHR dataset for the existing 100 virtual participants, with exact participant matching and validation summary.
 * Synthetic EHR + CGM fusion feature dataset with 198,000 rows, 100 participants, 18 CGM features, 11 encoded EHR features, and an explicit 29-feature manifest.
+* Participant-separated EHR + CGM fusion model evaluation comparing current glucose, CGM trajectory, and EHR + CGM fusion models with identical folds and leakage checks.
+* Final EHR + CGM fusion model artifact and explicit `BioSynthTwin` fusion runtime mode with static EHR plus historical CGM inference.
+* Streamlit dashboard integration of the EHR + CGM fusion runtime with model-mode selector, synthetic health profile, historical-only replay, and event-underway semantics.
+* Final architecture documentation and PDF diagram separating offline training/evaluation from live replay/inference.
 
 Not yet completed:
 
-* EHR + CGM fusion model training/evaluation
-* Digital Twin UI integration
 * Sensor gaps or missing-data simulation
 
 Next step:
 
-Train and participant-separately evaluate an EHR + CGM fusion model against the existing CGM-only trajectory baseline.
+Finalize the BioSynth Digital Twin Challenge 2026 submission package: technical documentation, presentation, minimum 20-minute video, README requirements, and public GitHub readiness.
