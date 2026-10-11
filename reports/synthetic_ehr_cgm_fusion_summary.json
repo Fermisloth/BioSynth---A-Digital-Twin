@@ -1,0 +1,127 @@
+{
+  "source_files": {
+    "cgm_trajectory_features": "reports\\synthetic_cgm_trajectory_features.csv",
+    "synthetic_ehr": "data\\02_synthetic\\ehr\\synthetic_ehr.csv"
+  },
+  "output_path": "reports\\synthetic_ehr_cgm_fusion_features.csv",
+  "row_count": 198000,
+  "participant_count": 100,
+  "target": {
+    "name": "pre_event_target",
+    "positive_rows": 23696,
+    "negative_rows": 174304,
+    "positive_rate": 0.11967676767676767
+  },
+  "feature_manifest": {
+    "CGM_FEATURES": [
+      "current_glucose_mg_dl",
+      "current_is_high",
+      "history_mean_glucose",
+      "history_median_glucose",
+      "history_min_glucose",
+      "history_max_glucose",
+      "history_range_glucose",
+      "glucose_change_15m",
+      "glucose_change_30m",
+      "glucose_change_60m",
+      "glucose_slope_per_hour",
+      "history_std_glucose",
+      "history_cv_glucose",
+      "history_high_count",
+      "history_high_fraction",
+      "history_minutes_above_180",
+      "trajectory_numeric_count",
+      "trajectory_actual_history_minutes"
+    ],
+    "EHR_FEATURES": [
+      "ehr_age_years",
+      "ehr_bmi_kg_m2",
+      "ehr_hba1c_percent",
+      "ehr_fasting_glucose_mg_dl",
+      "ehr_family_history_diabetes",
+      "ehr_hypertension_history",
+      "ehr_sex_female",
+      "ehr_sex_male",
+      "ehr_activity_low",
+      "ehr_activity_moderate",
+      "ehr_activity_high"
+    ],
+    "FUSION_FEATURES": [
+      "current_glucose_mg_dl",
+      "current_is_high",
+      "history_mean_glucose",
+      "history_median_glucose",
+      "history_min_glucose",
+      "history_max_glucose",
+      "history_range_glucose",
+      "glucose_change_15m",
+      "glucose_change_30m",
+      "glucose_change_60m",
+      "glucose_slope_per_hour",
+      "history_std_glucose",
+      "history_cv_glucose",
+      "history_high_count",
+      "history_high_fraction",
+      "history_minutes_above_180",
+      "trajectory_numeric_count",
+      "trajectory_actual_history_minutes",
+      "ehr_age_years",
+      "ehr_bmi_kg_m2",
+      "ehr_hba1c_percent",
+      "ehr_fasting_glucose_mg_dl",
+      "ehr_family_history_diabetes",
+      "ehr_hypertension_history",
+      "ehr_sex_female",
+      "ehr_sex_male",
+      "ehr_activity_low",
+      "ehr_activity_moderate",
+      "ehr_activity_high"
+    ],
+    "cgm_feature_count": 18,
+    "ehr_feature_count": 11,
+    "fusion_feature_count": 29
+  },
+  "ehr_encoding_strategy": {
+    "numeric_fields": {
+      "age_years": "copied to ehr_age_years",
+      "bmi_kg_m2": "copied to ehr_bmi_kg_m2",
+      "hba1c_percent": "copied to ehr_hba1c_percent",
+      "fasting_glucose_mg_dl": "copied to ehr_fasting_glucose_mg_dl"
+    },
+    "boolean_fields": {
+      "family_history_diabetes": "encoded as 0/1 in ehr_family_history_diabetes",
+      "hypertension_history": "encoded as 0/1 in ehr_hypertension_history"
+    },
+    "categorical_fields": {
+      "sex": "one-hot encoded as ehr_sex_female and ehr_sex_male",
+      "activity_level": "one-hot encoded as ehr_activity_low, ehr_activity_moderate, ehr_activity_high"
+    }
+  },
+  "excluded_from_predictive_features": [
+    "person_id",
+    "prediction_timestamp",
+    "simulation_phenotype",
+    "pre_event_target",
+    "synthetic_data_note",
+    "future/event-derived columns",
+    "simulator ground-truth parameters"
+  ],
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "row_count_matches_expected": true,
+    "participant_count_matches_expected": true,
+    "no_prediction_rows_lost_or_duplicated": true,
+    "every_prediction_row_has_ehr": true,
+    "pre_event_target_unchanged": true,
+    "cgm_features_unchanged": true,
+    "missing_required_ehr_values": 0,
+    "forbidden_columns_in_fusion_features": [],
+    "fusion_features_all_numeric": true,
+    "non_numeric_fusion_features": [],
+    "participant_sets_match": true,
+    "join_key": "person_id",
+    "join_uses_future_or_event_outcomes": false
+  },
+  "scientific_limitation": "Synthetic EHR values were generated in alignment with simulator phenotypes. Any future gain from EHR+CGM fusion may reflect simulator structure rather than genuine clinical value. This dataset does not yet show that EHR fusion improves prediction."
+}

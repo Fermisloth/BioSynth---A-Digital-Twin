@@ -1,0 +1,85 @@
+{
+  "random_seed": 20261011,
+  "source_participant_metadata": "data\\02_synthetic\\metadata\\synthetic_participants.csv",
+  "output_path": "data\\02_synthetic\\ehr\\synthetic_ehr.csv",
+  "record_count": 100,
+  "columns": [
+    "person_id",
+    "simulation_phenotype",
+    "age_years",
+    "sex",
+    "bmi_kg_m2",
+    "hba1c_percent",
+    "fasting_glucose_mg_dl",
+    "family_history_diabetes",
+    "hypertension_history",
+    "activity_level",
+    "synthetic_data_note"
+  ],
+  "phenotype_counts": {
+    "No diabetes-like": 40,
+    "Prediabetes-like": 30,
+    "T2D-like": 30
+  },
+  "sex_counts": {
+    "male": 61,
+    "female": 39
+  },
+  "activity_level_counts": {
+    "moderate": 44,
+    "low": 35,
+    "high": 21
+  },
+  "field_ranges": {
+    "age_years": {
+      "min": 18,
+      "max": 77,
+      "mean": 42.4
+    },
+    "bmi_kg_m2": {
+      "min": 18.0,
+      "max": 44.7,
+      "mean": 28.205
+    },
+    "hba1c_percent": {
+      "min": 4.7,
+      "max": 8.5,
+      "mean": 6.1610000000000005
+    },
+    "fasting_glucose_mg_dl": {
+      "min": 75,
+      "max": 216,
+      "mean": 114.79
+    }
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "record_count": 100,
+    "unique_person_ids": 100,
+    "participant_matching": {
+      "expected_participants": 100,
+      "missing_ids": [],
+      "extra_ids": [],
+      "exact_match": true,
+      "phenotype_match": true
+    },
+    "plausible_range_checks": {
+      "age_years": true,
+      "bmi_kg_m2": true,
+      "hba1c_percent": true,
+      "fasting_glucose_mg_dl": true,
+      "sex": true,
+      "activity_level": true
+    },
+    "missing_required_values": 0
+  },
+  "generation_assumptions": [
+    "One static EHR-like profile is generated for each existing synthetic participant.",
+    "Values are aligned with simulation_phenotype to be internally plausible.",
+    "Fields are generated from fixed random seed and phenotype profiles only.",
+    "No future CGM readings, future events, labels, or model outputs are used.",
+    "No EHR value is a genuine clinical record."
+  ],
+  "clinical_validation_note": "Synthetic static EHR data for BioSynth POC only; not real patient data and not clinically validated."
+}

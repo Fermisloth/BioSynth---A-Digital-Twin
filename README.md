@@ -995,6 +995,124 @@ Additional verification:
 * No future CGM entered `BioSynthTwin` during verification
 * Brief headless Streamlit startup succeeded and was terminated
 
+## Synthetic Static EHR Dataset
+
+A first static synthetic EHR dataset now exists for the same 100 BioSynth virtual participants used by the synthetic CGM population.
+
+Generator:
+
+```text
+scripts/generate_synthetic_ehr.py
+```
+
+Output:
+
+```text
+data/02_synthetic/ehr/synthetic_ehr.csv
+reports/synthetic_ehr_generation_summary.json
+```
+
+The dataset contains exactly one EHR-like record per existing synthetic participant and matches `person_id` values exactly against:
+
+```text
+data/02_synthetic/metadata/synthetic_participants.csv
+```
+
+Columns:
+
+* `person_id`
+* `simulation_phenotype`
+* `age_years`
+* `sex`
+* `bmi_kg_m2`
+* `hba1c_percent`
+* `fasting_glucose_mg_dl`
+* `family_history_diabetes`
+* `hypertension_history`
+* `activity_level`
+* `synthetic_data_note`
+
+Generation assumptions:
+
+* Fixed random seed: `20261011`
+* Profiles are aligned with the existing simulation phenotype metadata for internal plausibility.
+* No future CGM readings, future event outcomes, labels, model outputs, or dashboard predictions are used.
+* These are synthetic static EHR profiles only, not genuine clinical records.
+
+Verification:
+
+* Records: 100
+* Unique `person_id` values: 100
+* Exact participant ID match: PASS
+* Phenotype match against participant metadata: PASS
+* Missing required values: 0
+* Plausible range checks: PASS
+* Age range: 18-77
+* BMI range: 18.0-44.7
+* HbA1c range: 4.7-8.5
+* Fasting glucose range: 75-216
+
+This step creates the missing static EHR data layer only. The values are synthetic and phenotype-aligned, so they should not be interpreted as genuine clinical records.
+
+## Synthetic EHR + CGM Fusion Feature Dataset
+
+The EHR + CGM fusion feature dataset now joins each prediction row from the existing synthetic CGM trajectory feature table to the participant's single static synthetic EHR record.
+
+Build script:
+
+```text
+scripts/build_ehr_cgm_fusion_features.py
+```
+
+Outputs:
+
+```text
+reports/synthetic_ehr_cgm_fusion_features.csv
+reports/synthetic_ehr_cgm_fusion_summary.json
+```
+
+Fusion dataset shape:
+
+* Rows: 198,000
+* Participants: 100
+* CGM features: 18
+* Encoded EHR features: 11
+* Total fusion features: 29
+* Join key: `person_id`
+
+The join is many prediction rows to one static EHR record. It preserves the original prediction timestamps, labels, and CGM trajectory feature values; it does not recompute CGM features or labels.
+
+EHR feature encoding:
+
+* `age_years`, `bmi_kg_m2`, `hba1c_percent`, and `fasting_glucose_mg_dl` are copied into numeric `ehr_*` feature columns.
+* `family_history_diabetes` and `hypertension_history` are encoded as 0/1.
+* `sex` is one-hot encoded as `ehr_sex_female` and `ehr_sex_male`.
+* `activity_level` is one-hot encoded as `ehr_activity_low`, `ehr_activity_moderate`, and `ehr_activity_high`.
+
+Excluded from predictive fusion features:
+
+* `person_id`
+* `prediction_timestamp`
+* `simulation_phenotype`
+* `pre_event_target`
+* `synthetic_data_note`
+* Future/event-derived columns
+* Simulator ground-truth parameters
+
+Fusion verification:
+
+* Row count matches the existing trajectory feature dataset: PASS
+* Participant count: PASS
+* Every prediction row matched a synthetic EHR record: PASS
+* No prediction rows lost or duplicated: PASS
+* `pre_event_target` unchanged: PASS
+* All 18 CGM feature values unchanged: PASS
+* Missing required EHR values: 0
+* Forbidden columns in `FUSION_FEATURES`: none
+* All fusion features numeric: PASS
+
+No EHR + CGM fusion model has been trained yet. Because the EHR values are synthetic and aligned with simulator phenotypes, any future fusion gain may reflect simulator structure rather than genuine clinical utility.
+
 ## Current Boundary
 
 Completed:
@@ -1008,12 +1126,15 @@ Completed:
 * Reusable BioSynthTwin runtime, final synthetic trajectory model artifact, model metadata, and command-line demo.
 * Streamlit dashboard foundation proving `BioSynthTwin` can drive a historical-only visual replay for synthetic participant SYN-0085.
 * Guided judge-facing replay mode with event-centered navigation, retrospective future reveal separation, evidence panel, and historical-only runtime verification.
+* Synthetic static EHR dataset for the existing 100 virtual participants, with exact participant matching and validation summary.
+* Synthetic EHR + CGM fusion feature dataset with 198,000 rows, 100 participants, 18 CGM features, 11 encoded EHR features, and an explicit 29-feature manifest.
 
 Not yet completed:
 
+* EHR + CGM fusion model training/evaluation
 * Digital Twin UI integration
 * Sensor gaps or missing-data simulation
 
 Next step:
 
-Final hackathon polish: verify the complete judge demo flow, capture final screenshots/results, and prepare the concise BioSynth pitch/demo narrative.
+Train and participant-separately evaluate an EHR + CGM fusion model against the existing CGM-only trajectory baseline.
