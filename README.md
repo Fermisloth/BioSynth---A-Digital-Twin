@@ -2,13 +2,13 @@
 
 A research-grade proof of concept for a patient-specific digital twin that combines longitudinal EHR data with dynamic physiological time-series data to support predictive health monitoring.
 
-For a beginner-friendly walkthrough of the current system, data flow, model, runtime, and dashboard, see [docs/BIOSYNTH_TECHNICAL_GUIDE.md](docs/BIOSYNTH_TECHNICAL_GUIDE.md).
+For a beginner-friendly walkthrough of the current system, data flow, model, runtime, and dashboard, see [docs/BIOSYNTH_TECHNICAL_GUIDE.md](docs/BIOSYNTH_TECHNICAL_GUIDE.md). The full documentation map is in [docs/README.md](docs/README.md).
 
 ## Project Status
 
-**Current phase:** Foundation / Data Layer
+**Current phase:** Integrated synthetic EHR + CGM fusion / submission documentation
 
-The current implementation establishes the project structure, Python environment, configuration system, and development workflow. The prediction pipeline and digital-twin logic will be developed incrementally.
+The current implementation generates synthetic participant data, builds and evaluates CGM and EHR + CGM models, runs the saved model through `BioSynthTwin`, and presents the result in the Streamlit dashboard. The system remains a proof of concept and is not clinically validated.
 
 ## Development Environment
 
@@ -118,6 +118,10 @@ digital-twin-poc/
 │   └── 05_predictions/
 │
 ├── docs/
+│   ├── README.md
+│   ├── BIOSYNTH_ARCHITECTURE.md
+│   ├── BIOSYNTH_ARCHITECTURE.pdf
+│   ├── BIOSYNTH_TECHNICAL_GUIDE.md
 │   ├── api_reference.md
 │   ├── architecture.md
 │   ├── data_dictionary.md
