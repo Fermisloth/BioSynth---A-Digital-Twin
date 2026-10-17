@@ -1,0 +1,108 @@
+{
+  "inputs": {
+    "oof_predictions": "reports\\hall2018_baseline_oof_predictions.csv",
+    "prediction_dataset": "reports\\hall2018_prediction_dataset.csv",
+    "events": "reports\\hall2018_hyperglycemic_events.csv"
+  },
+  "alignment": {
+    "method": "person_id + prediction_timestamp",
+    "aligned_rows": 89329
+  },
+  "event_population": {
+    "distinct_events_evaluated": 83,
+    "pre_event_prediction_rows": 1662
+  },
+  "threshold_results": {
+    "0.10": {
+      "detected_events": 83,
+      "total_events": 83,
+      "detection_rate": 1.0,
+      "median_earliest_lead_minutes": 120.0,
+      "mean_earliest_lead_minutes": 109.4578313253012
+    },
+    "0.20": {
+      "detected_events": 81,
+      "total_events": 83,
+      "detection_rate": 0.9759036144578314,
+      "median_earliest_lead_minutes": 120.0,
+      "mean_earliest_lead_minutes": 109.07407407407408
+    },
+    "0.30": {
+      "detected_events": 81,
+      "total_events": 83,
+      "detection_rate": 0.9759036144578314,
+      "median_earliest_lead_minutes": 120.0,
+      "mean_earliest_lead_minutes": 105.37037037037037
+    },
+    "0.40": {
+      "detected_events": 80,
+      "total_events": 83,
+      "detection_rate": 0.963855421686747,
+      "median_earliest_lead_minutes": 117.5,
+      "mean_earliest_lead_minutes": 97.125
+    },
+    "0.50": {
+      "detected_events": 79,
+      "total_events": 83,
+      "detection_rate": 0.9518072289156626,
+      "median_earliest_lead_minutes": 90.0,
+      "mean_earliest_lead_minutes": 80.44303797468355
+    }
+  },
+  "lead_time_results": [
+    {
+      "required_lead_time_minutes": 15,
+      "total_events": 83,
+      "detected_events": 83,
+      "detection_rate": 1.0,
+      "median_actual_lead_time_minutes": 120.0,
+      "mean_actual_lead_time_minutes": 109.57831325301204,
+      "minimum_actual_lead_time_minutes": 20.0,
+      "maximum_actual_lead_time_minutes": 120.0
+    },
+    {
+      "required_lead_time_minutes": 30,
+      "total_events": 83,
+      "detected_events": 80,
+      "detection_rate": 0.963855421686747,
+      "median_actual_lead_time_minutes": 120.0,
+      "mean_actual_lead_time_minutes": 112.8125,
+      "minimum_actual_lead_time_minutes": 30.0,
+      "maximum_actual_lead_time_minutes": 120.0
+    },
+    {
+      "required_lead_time_minutes": 60,
+      "total_events": 83,
+      "detected_events": 76,
+      "detection_rate": 0.9156626506024096,
+      "median_actual_lead_time_minutes": 120.0,
+      "mean_actual_lead_time_minutes": 116.84210526315789,
+      "minimum_actual_lead_time_minutes": 65.0,
+      "maximum_actual_lead_time_minutes": 120.0
+    },
+    {
+      "required_lead_time_minutes": 120,
+      "total_events": 83,
+      "detected_events": 68,
+      "detection_rate": 0.8192771084337349,
+      "median_actual_lead_time_minutes": 120.0,
+      "mean_actual_lead_time_minutes": 120.0,
+      "minimum_actual_lead_time_minutes": 120.0,
+      "maximum_actual_lead_time_minutes": 120.0
+    }
+  ],
+  "overall_warning_depth": {
+    "median_rows_per_event": 23.0,
+    "mean_rows_per_event": 20.02409638554217,
+    "median_earliest_warning_minutes": 120.0,
+    "mean_earliest_warning_minutes": 109.57831325301204
+  },
+  "methodology_notes": [
+    "Evaluation is performed at the distinct hyperglycemic-event level.",
+    "An event is considered detected when at least one pre-event prediction reaches the specified probability threshold.",
+    "Earliest warning means the prediction furthest before event start that satisfies the threshold.",
+    "This avoids treating overlapping prediction windows for one event as independent successful events.",
+    "Thresholds are evaluated for characterization and are not declared clinical alert thresholds.",
+    "Event-underway prediction rows are excluded from the early-warning event detection calculation."
+  ]
+}

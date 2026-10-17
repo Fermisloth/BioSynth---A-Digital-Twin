@@ -1,0 +1,5 @@
+required_lead_time_minutes,total_events,detected_events,detection_rate,median_actual_lead_time_minutes,mean_actual_lead_time_minutes,minimum_actual_lead_time_minutes,maximum_actual_lead_time_minutes
+15,83,83,1.0,120.0,109.57831325301204,20.0,120.0
+30,83,80,0.963855421686747,120.0,112.8125,30.0,120.0
+60,83,76,0.9156626506024096,120.0,116.84210526315789,65.0,120.0
+120,83,68,0.8192771084337349,120.0,120.0,120.0,120.0

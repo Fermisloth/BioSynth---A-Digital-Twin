@@ -1,0 +1,101 @@
+person_id,simulation_phenotype,age_years,sex,bmi_kg_m2,hba1c_percent,fasting_glucose_mg_dl,family_history_diabetes,hypertension_history,activity_level,synthetic_data_note
+SYN-0001,No diabetes-like,39,female,24.7,5.1,82,True,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0002,No diabetes-like,29,female,24.6,5.4,92,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0003,No diabetes-like,48,male,21.1,5.1,87,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0004,No diabetes-like,31,female,29.4,5.6,85,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0005,No diabetes-like,29,male,27.1,5.8,77,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0006,No diabetes-like,40,male,27.8,5.3,98,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0007,No diabetes-like,35,male,26.3,5.1,89,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0008,No diabetes-like,37,female,22.9,5.3,105,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0009,No diabetes-like,27,female,20.6,5.1,102,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0010,No diabetes-like,35,male,26.4,5.2,88,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0011,No diabetes-like,40,female,25.3,5.4,89,True,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0012,No diabetes-like,40,male,23.7,5.4,110,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0013,No diabetes-like,29,male,21.2,5.4,79,False,True,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0014,No diabetes-like,22,female,31.3,5.5,100,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0015,No diabetes-like,18,male,19.7,5.5,75,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0016,No diabetes-like,18,male,25.7,5.4,92,True,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0017,No diabetes-like,34,male,20.5,5.5,87,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0018,No diabetes-like,22,female,21.3,5.4,92,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0019,No diabetes-like,40,male,23.0,5.6,85,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0020,No diabetes-like,32,male,25.7,5.6,92,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0021,No diabetes-like,32,female,21.4,5.5,85,False,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0022,No diabetes-like,36,female,26.3,5.3,88,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0023,No diabetes-like,44,female,24.5,5.3,91,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0024,No diabetes-like,54,male,20.5,5.2,76,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0025,No diabetes-like,31,male,22.0,4.7,90,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0026,No diabetes-like,51,female,24.4,5.3,88,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0027,No diabetes-like,46,female,20.5,5.1,89,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0028,No diabetes-like,35,male,26.8,5.4,88,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0029,No diabetes-like,23,female,30.0,5.4,91,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0030,No diabetes-like,33,female,26.3,5.5,98,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0031,No diabetes-like,34,male,21.2,5.3,95,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0032,No diabetes-like,42,male,25.9,5.5,96,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0033,No diabetes-like,32,female,27.3,5.0,81,False,True,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0034,No diabetes-like,18,male,21.3,5.4,87,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0035,No diabetes-like,38,female,25.4,4.9,91,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0036,No diabetes-like,38,male,27.1,5.1,88,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0037,No diabetes-like,19,female,26.8,5.4,95,False,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0038,No diabetes-like,21,male,19.6,5.5,86,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0039,No diabetes-like,22,male,18.0,5.7,78,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0040,No diabetes-like,22,female,19.8,5.1,110,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0041,Prediabetes-like,38,male,31.7,6.2,105,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0042,Prediabetes-like,46,male,30.6,6.2,102,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0043,Prediabetes-like,33,female,28.4,6.1,99,True,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0044,Prediabetes-like,51,female,35.3,5.9,113,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0045,Prediabetes-like,25,male,21.0,5.7,128,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0046,Prediabetes-like,72,male,34.3,5.8,115,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0047,Prediabetes-like,51,female,25.0,5.9,114,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0048,Prediabetes-like,50,female,26.0,5.9,119,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0049,Prediabetes-like,44,female,31.6,5.7,113,False,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0050,Prediabetes-like,42,male,28.7,6.4,104,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0051,Prediabetes-like,45,female,25.2,6.4,104,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0052,Prediabetes-like,31,male,28.3,5.7,104,True,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0053,Prediabetes-like,39,female,26.6,6.0,122,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0054,Prediabetes-like,57,male,26.9,6.1,119,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0055,Prediabetes-like,36,male,27.1,6.2,106,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0056,Prediabetes-like,53,female,31.5,5.8,105,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0057,Prediabetes-like,41,female,30.7,5.8,111,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0058,Prediabetes-like,51,male,26.1,6.4,127,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0059,Prediabetes-like,43,male,27.4,5.9,124,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0060,Prediabetes-like,33,male,26.7,6.2,117,True,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0061,Prediabetes-like,49,male,28.6,6.2,111,True,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0062,Prediabetes-like,35,male,24.4,6.3,107,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0063,Prediabetes-like,24,male,35.6,6.2,117,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0064,Prediabetes-like,42,male,26.4,5.9,120,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0065,Prediabetes-like,51,male,32.8,6.0,99,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0066,Prediabetes-like,42,male,21.0,5.9,96,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0067,Prediabetes-like,29,female,31.6,5.7,119,True,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0068,Prediabetes-like,55,male,32.5,5.9,103,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0069,Prediabetes-like,52,male,30.2,5.8,123,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0070,Prediabetes-like,51,male,25.7,6.0,101,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0071,T2D-like,36,male,44.4,8.4,152,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0072,T2D-like,68,female,37.0,6.5,126,True,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0073,T2D-like,55,male,35.7,7.2,126,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0074,T2D-like,47,male,32.0,8.2,157,True,False,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0075,T2D-like,32,male,29.6,7.2,126,True,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0076,T2D-like,61,male,25.1,6.5,168,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0077,T2D-like,61,male,30.9,8.0,126,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0078,T2D-like,60,male,34.1,7.3,132,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0079,T2D-like,72,female,35.2,6.9,126,False,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0080,T2D-like,71,female,33.5,8.5,216,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0081,T2D-like,56,female,40.1,7.9,195,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0082,T2D-like,63,male,28.9,6.7,182,False,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0083,T2D-like,51,female,34.7,7.8,144,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0084,T2D-like,55,male,31.2,7.3,153,False,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0085,T2D-like,48,female,30.1,7.8,126,True,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0086,T2D-like,44,male,34.2,7.1,147,True,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0087,T2D-like,53,male,33.1,7.0,178,True,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0088,T2D-like,68,male,36.9,7.8,149,True,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0089,T2D-like,48,female,24.7,7.7,155,True,True,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0090,T2D-like,59,male,33.4,8.5,149,True,True,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0091,T2D-like,34,female,31.8,6.5,162,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0092,T2D-like,59,male,36.7,7.1,150,True,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0093,T2D-like,47,female,33.9,6.8,140,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0094,T2D-like,44,male,44.7,7.5,161,False,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0095,T2D-like,47,male,33.5,7.9,162,True,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0096,T2D-like,56,male,26.8,7.5,132,True,False,moderate,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0097,T2D-like,36,male,35.1,6.7,126,True,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0098,T2D-like,48,male,23.1,8.0,137,False,False,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0099,T2D-like,57,male,34.8,6.5,155,False,True,high,Synthetic static EHR profile for BioSynth POC; not a real clinical record.
+SYN-0100,T2D-like,77,female,34.0,7.8,177,False,True,low,Synthetic static EHR profile for BioSynth POC; not a real clinical record.

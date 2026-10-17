@@ -1,0 +1,104 @@
+{
+  "input": "reports\\hall2018_prediction_dataset.csv",
+  "output": "reports\\hall2018_feature_dataset.csv",
+  "rows": 89329,
+  "participants": 57,
+  "feature_count": 7,
+  "feature_columns": [
+    "current_glucose_mg_dl",
+    "current_is_high",
+    "history_observation_count",
+    "actual_history_minutes",
+    "current_glucose_squared",
+    "current_glucose_above_140",
+    "current_glucose_above_180"
+  ],
+  "target": {
+    "name": "pre_event_target",
+    "positive_count": 1662,
+    "negative_count": 87667,
+    "positive_rate": 0.018605380111721838
+  },
+  "missingness": {
+    "current_glucose_mg_dl": 3,
+    "current_is_high": 0,
+    "history_observation_count": 0,
+    "actual_history_minutes": 0,
+    "current_glucose_squared": 3,
+    "current_glucose_above_140": 0,
+    "current_glucose_above_180": 0
+  },
+  "numeric_ranges": {
+    "current_glucose_mg_dl": {
+      "min": 41.0,
+      "max": 303.0,
+      "mean": 102.13702617379039,
+      "median": 99.0
+    },
+    "current_is_high": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.008160843623011563,
+      "median": 0.0
+    },
+    "history_observation_count": {
+      "min": 6.0,
+      "max": 14.0,
+      "mean": 12.895856888580417,
+      "median": 13.0
+    },
+    "actual_history_minutes": {
+      "min": 60.0,
+      "max": 60.0,
+      "mean": 60.0,
+      "median": 60.0
+    },
+    "current_glucose_squared": {
+      "min": 1681.0,
+      "max": 91809.0,
+      "mean": 10981.003224145266,
+      "median": 9801.0
+    },
+    "current_glucose_above_140": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.06068577953408188,
+      "median": 0.0
+    },
+    "current_glucose_above_180": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.008160843623011563,
+      "median": 0.0
+    }
+  },
+  "participant_coverage": {
+    "min_rows": 908,
+    "median_rows": 1595.0,
+    "max_rows": 1739
+  },
+  "participant_positive_rows": {
+    "min": 0,
+    "median": 22.0,
+    "max": 243
+  },
+  "leakage_audit": {
+    "forbidden_columns_present_in_source": [
+      "actual_future_minutes",
+      "event_status",
+      "future_hyperglycemia",
+      "future_max_glucose_mg_dl",
+      "future_observation_count",
+      "horizon_minutes",
+      "lookback_minutes",
+      "prediction_class",
+      "segment_id",
+      "target_event_id",
+      "time_from_start_time_minutes",
+      "time_to_start_time_minutes"
+    ],
+    "forbidden_columns_in_feature_matrix": [],
+    "status": "PASS"
+  },
+  "methodological_note": "The current supervised prediction CSV does not contain the complete historical glucose sequence for each prediction row. Therefore this first feature set deliberately avoids inventing history statistics. Trajectory features such as mean, standard deviation, range, and slope should be derived directly from the raw timestamped CGM files in a subsequent feature-building stage."
+}

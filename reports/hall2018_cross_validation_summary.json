@@ -1,0 +1,136 @@
+{
+  "dataset": {
+    "feature_path": "reports\\hall2018_cgm_trajectory_features.csv",
+    "rows": 89329,
+    "participants": 57,
+    "positive_rows": 1662,
+    "negative_rows": 87667,
+    "positive_rate": 0.018605380111721838
+  },
+  "cross_validation": {
+    "method": "GroupKFold",
+    "group_column": "person_id",
+    "n_splits": 5,
+    "random_state": 42,
+    "participant_leakage": false,
+    "all_rows_have_oof_predictions": true
+  },
+  "models": {
+    "current_glucose_baseline": {
+      "features": [
+        "current_glucose_mg_dl"
+      ],
+      "overall_oof_metrics": {
+        "pr_auc": 0.06565013141951126,
+        "roc_auc": 0.7452638647638257,
+        "precision": 0.04203029804050716,
+        "recall": 0.6143200962695547,
+        "f1": 0.07867766047622717,
+        "true_negatives": 64396,
+        "false_positives": 23271,
+        "false_negatives": 641,
+        "true_positives": 1021,
+        "specificity": 0.7345523401051707,
+        "false_positive_rate": 0.2654476598948293
+      }
+    },
+    "cgm_trajectory_logistic": {
+      "features": [
+        "current_glucose_mg_dl",
+        "current_is_high",
+        "history_mean_glucose",
+        "history_median_glucose",
+        "history_min_glucose",
+        "history_max_glucose",
+        "history_range_glucose",
+        "glucose_change_15m",
+        "glucose_change_30m",
+        "glucose_change_60m",
+        "glucose_slope_per_hour",
+        "history_std_glucose",
+        "history_cv_glucose",
+        "history_high_count",
+        "history_high_fraction",
+        "history_minutes_above_180",
+        "trajectory_numeric_count",
+        "trajectory_actual_history_minutes"
+      ],
+      "overall_oof_metrics": {
+        "pr_auc": 0.138272866141594,
+        "roc_auc": 0.7742515275332785,
+        "precision": 0.046901390152007276,
+        "recall": 0.6516245487364621,
+        "f1": 0.08750454490364805,
+        "true_negatives": 65659,
+        "false_positives": 22008,
+        "false_negatives": 579,
+        "true_positives": 1083,
+        "specificity": 0.7489591294329679,
+        "false_positive_rate": 0.25104087056703206
+      }
+    }
+  },
+  "comparison": {
+    "pr_auc_delta": 0.07262273472208275,
+    "roc_auc_delta": 0.02898766276945286,
+    "relative_pr_auc_change": 1.1062085201020515
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "baseline_pr_auc": 0.05898776672327807,
+      "trajectory_pr_auc": 0.12567110269756757,
+      "pr_auc_delta": 0.06668333597428949,
+      "baseline_roc_auc": 0.7594034670933195,
+      "trajectory_roc_auc": 0.7953208246467456,
+      "roc_auc_delta": 0.035917357553426066
+    },
+    {
+      "fold": 2,
+      "baseline_pr_auc": 0.050085242936957125,
+      "trajectory_pr_auc": 0.13503632944790336,
+      "pr_auc_delta": 0.08495108651094624,
+      "baseline_roc_auc": 0.7922023642778456,
+      "trajectory_roc_auc": 0.7988085391106181,
+      "roc_auc_delta": 0.006606174832772482
+    },
+    {
+      "fold": 3,
+      "baseline_pr_auc": 0.03937757881123193,
+      "trajectory_pr_auc": 0.14633835891893046,
+      "pr_auc_delta": 0.10696078010769852,
+      "baseline_roc_auc": 0.7227977190846767,
+      "trajectory_roc_auc": 0.7512063518661811,
+      "roc_auc_delta": 0.028408632781504406
+    },
+    {
+      "fold": 4,
+      "baseline_pr_auc": 0.07689352492523832,
+      "trajectory_pr_auc": 0.128109853496172,
+      "pr_auc_delta": 0.05121632857093367,
+      "baseline_roc_auc": 0.7527232639971493,
+      "trajectory_roc_auc": 0.7761068549285111,
+      "roc_auc_delta": 0.023383590931361775
+    },
+    {
+      "fold": 5,
+      "baseline_pr_auc": 0.08984034106124103,
+      "trajectory_pr_auc": 0.1570396151732054,
+      "pr_auc_delta": 0.06719927411196436,
+      "baseline_roc_auc": 0.699793287355378,
+      "trajectory_roc_auc": 0.7371069295346786,
+      "roc_auc_delta": 0.037313642179300555
+    }
+  ],
+  "methodology_notes": [
+    "Primary target is pre_event_target.",
+    "Participants are the grouping unit for cross-validation.",
+    "Every row receives an out-of-fold prediction.",
+    "No participant is present in both training and validation within a fold.",
+    "Preprocessing is fitted independently inside each training fold.",
+    "Class weighting is used because the positive target is rare.",
+    "PR-AUC is emphasized because the target is highly imbalanced.",
+    "The 0.5 threshold is retained only for descriptive threshold-dependent metrics.",
+    "Threshold optimization is deferred until cross-validation establishes generalization."
+  ]
+}

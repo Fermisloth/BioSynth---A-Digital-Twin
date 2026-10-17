@@ -1,0 +1,261 @@
+{
+  "dataset": {
+    "feature_path": "reports\\synthetic_ehr_cgm_fusion_features.csv",
+    "feature_manifest_path": "reports\\synthetic_ehr_cgm_fusion_summary.json",
+    "rows": 198000,
+    "participants": 100,
+    "positive_rows": 23696,
+    "negative_rows": 174304,
+    "positive_rate": 0.11967676767676767
+  },
+  "cross_validation": {
+    "method": "GroupKFold",
+    "group_column": "person_id",
+    "n_splits": 5,
+    "identical_participant_folds_for_all_models": true,
+    "participant_leakage_check": "PASS",
+    "all_rows_have_oof_predictions": true,
+    "preprocessing_fit_inside_each_training_fold": true,
+    "training_predictions_used_for_evaluation": false
+  },
+  "models": {
+    "current_glucose_baseline": {
+      "features": [
+        "current_glucose_mg_dl"
+      ],
+      "feature_count": 1,
+      "overall_oof_metrics": {
+        "pr_auc": 0.19176399489286805,
+        "roc_auc": 0.7302721894573555,
+        "precision": 0.23644478063540092,
+        "recall": 0.6595627954085078,
+        "f1": 0.34810013809078355,
+        "specificity": 0.7104426748668992,
+        "false_positive_rate": 0.2895573251331008,
+        "true_negatives": 123833,
+        "false_positives": 50471,
+        "false_negatives": 8067,
+        "true_positives": 15629
+      }
+    },
+    "cgm_trajectory": {
+      "features": [
+        "current_glucose_mg_dl",
+        "current_is_high",
+        "history_mean_glucose",
+        "history_median_glucose",
+        "history_min_glucose",
+        "history_max_glucose",
+        "history_range_glucose",
+        "glucose_change_15m",
+        "glucose_change_30m",
+        "glucose_change_60m",
+        "glucose_slope_per_hour",
+        "history_std_glucose",
+        "history_cv_glucose",
+        "history_high_count",
+        "history_high_fraction",
+        "history_minutes_above_180",
+        "trajectory_numeric_count",
+        "trajectory_actual_history_minutes"
+      ],
+      "feature_count": 18,
+      "overall_oof_metrics": {
+        "pr_auc": 0.44326166862386696,
+        "roc_auc": 0.8539206519782523,
+        "precision": 0.3116687535957224,
+        "recall": 0.7773041863605672,
+        "f1": 0.44493562335434933,
+        "specificity": 0.766620387369194,
+        "false_positive_rate": 0.23337961263080595,
+        "true_negatives": 133625,
+        "false_positives": 40679,
+        "false_negatives": 5277,
+        "true_positives": 18419
+      }
+    },
+    "ehr_cgm_fusion": {
+      "features": [
+        "current_glucose_mg_dl",
+        "current_is_high",
+        "history_mean_glucose",
+        "history_median_glucose",
+        "history_min_glucose",
+        "history_max_glucose",
+        "history_range_glucose",
+        "glucose_change_15m",
+        "glucose_change_30m",
+        "glucose_change_60m",
+        "glucose_slope_per_hour",
+        "history_std_glucose",
+        "history_cv_glucose",
+        "history_high_count",
+        "history_high_fraction",
+        "history_minutes_above_180",
+        "trajectory_numeric_count",
+        "trajectory_actual_history_minutes",
+        "ehr_age_years",
+        "ehr_bmi_kg_m2",
+        "ehr_hba1c_percent",
+        "ehr_fasting_glucose_mg_dl",
+        "ehr_family_history_diabetes",
+        "ehr_hypertension_history",
+        "ehr_sex_female",
+        "ehr_sex_male",
+        "ehr_activity_low",
+        "ehr_activity_moderate",
+        "ehr_activity_high"
+      ],
+      "cgm_feature_count": 18,
+      "ehr_feature_count": 11,
+      "feature_count": 29,
+      "overall_oof_metrics": {
+        "pr_auc": 0.4351616630362706,
+        "roc_auc": 0.8729131663139595,
+        "precision": 0.34206457141792573,
+        "recall": 0.774856515867657,
+        "f1": 0.4746100060744704,
+        "specificity": 0.7973884707178264,
+        "false_positive_rate": 0.20261152928217369,
+        "true_negatives": 138988,
+        "false_positives": 35316,
+        "false_negatives": 5335,
+        "true_positives": 18361
+      }
+    }
+  },
+  "comparison": {
+    "fusion_minus_trajectory_pr_auc": -0.008100005587596382,
+    "fusion_minus_trajectory_roc_auc": 0.018992514335707256,
+    "relative_pr_auc_change_vs_trajectory": -0.01827364322465181,
+    "fusion_pr_auc_improved_folds_vs_trajectory": 4,
+    "fusion_roc_auc_improved_folds_vs_trajectory": 5
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4323,
+      "validation_positive_rate": 0.10916666666666666,
+      "train_participants": 80,
+      "trajectory_pr_auc": 0.4175943949136012,
+      "fusion_pr_auc": 0.42890249098820443,
+      "trajectory_roc_auc": 0.8464155967676091,
+      "fusion_roc_auc": 0.8788053670291022,
+      "fusion_minus_trajectory_pr_auc": 0.011308096074603258,
+      "fusion_minus_trajectory_roc_auc": 0.032389770261493034
+    },
+    {
+      "fold": 2,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 5174,
+      "validation_positive_rate": 0.13065656565656567,
+      "train_participants": 80,
+      "trajectory_pr_auc": 0.47485959960585455,
+      "fusion_pr_auc": 0.4735985095112666,
+      "trajectory_roc_auc": 0.8655894883612363,
+      "fusion_roc_auc": 0.8674617473318175,
+      "fusion_minus_trajectory_pr_auc": -0.0012610900945879688,
+      "fusion_minus_trajectory_roc_auc": 0.0018722589705811865
+    },
+    {
+      "fold": 3,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4931,
+      "validation_positive_rate": 0.12452020202020202,
+      "train_participants": 80,
+      "trajectory_pr_auc": 0.4425689243834876,
+      "fusion_pr_auc": 0.46055189082399556,
+      "trajectory_roc_auc": 0.8482677201985513,
+      "fusion_roc_auc": 0.870513697640318,
+      "fusion_minus_trajectory_pr_auc": 0.017982966440507953,
+      "fusion_minus_trajectory_roc_auc": 0.022245977441766707
+    },
+    {
+      "fold": 4,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4661,
+      "validation_positive_rate": 0.1177020202020202,
+      "train_participants": 80,
+      "trajectory_pr_auc": 0.5100780362864239,
+      "fusion_pr_auc": 0.514796151549604,
+      "trajectory_roc_auc": 0.880195734400346,
+      "fusion_roc_auc": 0.894884048963652,
+      "fusion_minus_trajectory_pr_auc": 0.0047181152631801115,
+      "fusion_minus_trajectory_roc_auc": 0.014688314563305993
+    },
+    {
+      "fold": 5,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4607,
+      "validation_positive_rate": 0.11633838383838384,
+      "train_participants": 80,
+      "trajectory_pr_auc": 0.3880541897913865,
+      "fusion_pr_auc": 0.3974675279845363,
+      "trajectory_roc_auc": 0.8292166852236147,
+      "fusion_roc_auc": 0.8642538455286333,
+      "fusion_minus_trajectory_pr_auc": 0.009413338193149767,
+      "fusion_minus_trajectory_roc_auc": 0.03503716030501858
+    }
+  ],
+  "phenotype_oof_results": {
+    "No diabetes-like": {
+      "participants": 40,
+      "rows": 79200,
+      "positives": 144,
+      "positive_rate": 0.0018181818181818182,
+      "baseline_pr_auc": 0.011234734197654996,
+      "trajectory_pr_auc": 0.01099946300787179,
+      "fusion_pr_auc": 0.044204297136209436,
+      "baseline_roc_auc": 0.7015366392880434,
+      "trajectory_roc_auc": 0.7108749564303223,
+      "fusion_roc_auc": 0.6598005773685038
+    },
+    "Prediabetes-like": {
+      "participants": 30,
+      "rows": 59400,
+      "positives": 7396,
+      "positive_rate": 0.12451178451178452,
+      "baseline_pr_auc": 0.13132621553654134,
+      "trajectory_pr_auc": 0.17918820451931194,
+      "fusion_pr_auc": 0.2317736656804758,
+      "baseline_roc_auc": 0.5669083888438253,
+      "trajectory_roc_auc": 0.6479224083274536,
+      "fusion_roc_auc": 0.6958749538091447
+    },
+    "T2D-like": {
+      "participants": 30,
+      "rows": 59400,
+      "positives": 16156,
+      "positive_rate": 0.271986531986532,
+      "baseline_pr_auc": 0.22623192468018732,
+      "trajectory_pr_auc": 0.5781903654523443,
+      "fusion_pr_auc": 0.4933168032304517,
+      "baseline_roc_auc": 0.43927402044866914,
+      "trajectory_roc_auc": 0.8117019810363891,
+      "fusion_roc_auc": 0.7669188290520217
+    }
+  },
+  "leakage_protection": {
+    "no_participant_overlap_between_train_and_validation": "PASS",
+    "no_future_cgm_predictive_features": "PASS",
+    "no_event_labels_as_predictive_features": "PASS",
+    "simulation_phenotype_not_model_input": "PASS",
+    "person_id_not_model_input": "PASS",
+    "no_simulator_ground_truth_parameters_as_model_inputs": "PASS",
+    "preprocessing_trained_within_each_fold_only": "PASS"
+  },
+  "feature_exclusion_notes": [
+    "simulation_phenotype, person_id, prediction_timestamp, and pre_event_target were not predictive features.",
+    "Simulator-generation parameters were not predictive features.",
+    "Simulator event ground truth and future/event-derived fields were not predictive features.",
+    "simulation_phenotype was used only for OOF subgroup reporting."
+  ],
+  "scientific_limitation": "Synthetic EHR values were generated using simulation phenotype metadata, and synthetic CGM trajectories were also influenced by phenotype. Fusion performance therefore reflects a synthetic two-stream POC and is not independent clinical validation or clinically validated personalization.",
+  "status": "MIXED RESULTS"
+}
