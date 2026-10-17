@@ -173,6 +173,14 @@ Raw datasets should not be committed to Git.
 
 Generated model artifacts should also remain outside normal source control unless explicitly required.
 
+## Run The Tests
+
+The repository includes focused runtime tests. They verify that future CGM readings are excluded, fusion requires an explicit EHR profile, the two model modes use 18 versus 29 features, and invalid modes are rejected.
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
 ---
 
 # Development Workflow

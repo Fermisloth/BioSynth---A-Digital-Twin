@@ -668,6 +668,21 @@ Hall branch, if rebuilding real-world evidence:
 
 These validate Hall data, detect events, build labels/features, and evaluate the Hall trajectory model.
 
+### C. Running the automated runtime checks
+
+The `tests/` directory is now a real test package rather than an empty placeholder. `tests/test_biosynth_twin.py` checks the most important runtime contracts:
+
+- future CGM rows do not change a prediction made at an earlier timestamp;
+- fusion mode refuses to run without an explicit EHR profile;
+- CGM-only mode produces 18 features and fusion mode produces 29;
+- unsupported model modes fail clearly.
+
+Run the checks with:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
 ## 17. What Happens When I Click Next?
 
 In guided demo mode:
