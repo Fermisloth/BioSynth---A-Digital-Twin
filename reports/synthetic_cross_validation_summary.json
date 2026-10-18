@@ -1,0 +1,190 @@
+{
+  "dataset": {
+    "feature_path": "reports\\synthetic_cgm_trajectory_features.csv",
+    "rows": 198000,
+    "participants": 100,
+    "positive_rows": 23696,
+    "negative_rows": 174304,
+    "positive_rate": 0.11967676767676767
+  },
+  "cross_validation": {
+    "method": "GroupKFold",
+    "group_column": "person_id",
+    "n_splits": 5,
+    "participant_leakage_check": "PASS",
+    "all_rows_have_oof_predictions": true
+  },
+  "models": {
+    "current_glucose_baseline": {
+      "features": [
+        "current_glucose_mg_dl"
+      ],
+      "overall_oof_metrics": {
+        "pr_auc": 0.19176399489286805,
+        "roc_auc": 0.7302721894573555,
+        "precision": 0.23644478063540092,
+        "recall": 0.6595627954085078,
+        "f1": 0.34810013809078355,
+        "specificity": 0.7104426748668992,
+        "false_positive_rate": 0.2895573251331008,
+        "true_negatives": 123833,
+        "false_positives": 50471,
+        "false_negatives": 8067,
+        "true_positives": 15629
+      }
+    },
+    "cgm_trajectory_logistic": {
+      "features": [
+        "current_glucose_mg_dl",
+        "current_is_high",
+        "history_mean_glucose",
+        "history_median_glucose",
+        "history_min_glucose",
+        "history_max_glucose",
+        "history_range_glucose",
+        "glucose_change_15m",
+        "glucose_change_30m",
+        "glucose_change_60m",
+        "glucose_slope_per_hour",
+        "history_std_glucose",
+        "history_cv_glucose",
+        "history_high_count",
+        "history_high_fraction",
+        "history_minutes_above_180",
+        "trajectory_numeric_count",
+        "trajectory_actual_history_minutes"
+      ],
+      "overall_oof_metrics": {
+        "pr_auc": 0.4432616220255617,
+        "roc_auc": 0.8539206473781107,
+        "precision": 0.3116687535957224,
+        "recall": 0.7773041863605672,
+        "f1": 0.44493562335434933,
+        "specificity": 0.766620387369194,
+        "false_positive_rate": 0.23337961263080595,
+        "true_negatives": 133625,
+        "false_positives": 40679,
+        "false_negatives": 5277,
+        "true_positives": 18419
+      }
+    }
+  },
+  "comparison": {
+    "pr_auc_delta": 0.25149762713269364,
+    "roc_auc_delta": 0.12364845792075518,
+    "relative_pr_auc_change": 1.3114955561558712,
+    "trajectory_pr_auc_improved_folds": 5,
+    "trajectory_roc_auc_improved_folds": 5
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "train_participants": 80,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4323,
+      "validation_positive_rate": 0.10916666666666666,
+      "baseline_pr_auc": 0.18026489177358535,
+      "trajectory_pr_auc": 0.41759429306526497,
+      "baseline_roc_auc": 0.7276242297739557,
+      "trajectory_roc_auc": 0.8464155902103383,
+      "pr_auc_delta": 0.23732940129167962,
+      "roc_auc_delta": 0.11879136043638261
+    },
+    {
+      "fold": 2,
+      "train_participants": 80,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 5174,
+      "validation_positive_rate": 0.13065656565656567,
+      "baseline_pr_auc": 0.20299235401809146,
+      "trajectory_pr_auc": 0.47485959960585455,
+      "baseline_roc_auc": 0.7290272743129238,
+      "trajectory_roc_auc": 0.8655894883612363,
+      "pr_auc_delta": 0.2718672455877631,
+      "roc_auc_delta": 0.13656221404831248
+    },
+    {
+      "fold": 3,
+      "train_participants": 80,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4931,
+      "validation_positive_rate": 0.12452020202020202,
+      "baseline_pr_auc": 0.19497992329275388,
+      "trajectory_pr_auc": 0.4425689243834876,
+      "baseline_roc_auc": 0.7253653915627573,
+      "trajectory_roc_auc": 0.8482677201985513,
+      "pr_auc_delta": 0.24758900109073373,
+      "roc_auc_delta": 0.12290232863579409
+    },
+    {
+      "fold": 4,
+      "train_participants": 80,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4661,
+      "validation_positive_rate": 0.1177020202020202,
+      "baseline_pr_auc": 0.19773868044789988,
+      "trajectory_pr_auc": 0.5100780362864239,
+      "baseline_roc_auc": 0.7464458652947957,
+      "trajectory_roc_auc": 0.880195734400346,
+      "pr_auc_delta": 0.312339355838524,
+      "roc_auc_delta": 0.1337498691055503
+    },
+    {
+      "fold": 5,
+      "train_participants": 80,
+      "validation_participants": 20,
+      "validation_rows": 39600,
+      "validation_positives": 4607,
+      "validation_positive_rate": 0.11633838383838384,
+      "baseline_pr_auc": 0.18300712947682965,
+      "trajectory_pr_auc": 0.3880541897913865,
+      "baseline_roc_auc": 0.7221203240927263,
+      "trajectory_roc_auc": 0.8292166852236147,
+      "pr_auc_delta": 0.20504706031455686,
+      "roc_auc_delta": 0.10709636113088838
+    }
+  ],
+  "phenotype_oof_results": {
+    "No diabetes-like": {
+      "participants": 40,
+      "rows": 79200,
+      "positives": 144,
+      "positive_rate": 0.0018181818181818182,
+      "baseline_pr_auc": 0.011234734197654996,
+      "trajectory_pr_auc": 0.010999464567924493,
+      "baseline_roc_auc": 0.7015366392880434,
+      "trajectory_roc_auc": 0.710875219956599
+    },
+    "Prediabetes-like": {
+      "participants": 30,
+      "rows": 59400,
+      "positives": 7396,
+      "positive_rate": 0.12451178451178452,
+      "baseline_pr_auc": 0.13132621553654134,
+      "trajectory_pr_auc": 0.17918815445831882,
+      "baseline_roc_auc": 0.5669083888438253,
+      "trajectory_roc_auc": 0.6479223979276212
+    },
+    "T2D-like": {
+      "participants": 30,
+      "rows": 59400,
+      "positives": 16156,
+      "positive_rate": 0.271986531986532,
+      "baseline_pr_auc": 0.22623192468018732,
+      "trajectory_pr_auc": 0.5781903061506333,
+      "baseline_roc_auc": 0.43927402044866914,
+      "trajectory_roc_auc": 0.8117019710170671
+    }
+  },
+  "feature_exclusion_notes": [
+    "simulation_phenotype, person_id, and prediction_timestamp were not predictive features.",
+    "Simulator-generation parameters were not predictive features.",
+    "Simulator event ground truth and future/event-derived fields were not predictive features.",
+    "simulation_phenotype was used only for OOF subgroup reporting."
+  ],
+  "status": "SYNTHETIC MODEL STATUS: TRAJECTORY SIGNAL CONFIRMED"
+}

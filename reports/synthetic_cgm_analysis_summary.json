@@ -1,0 +1,388 @@
+{
+  "overall_distribution": {
+    "participants": 100,
+    "observations": 201600,
+    "mean": 124.86200049603175,
+    "median": 114.1,
+    "std": 41.32446557852228,
+    "min": 40.0,
+    "max": 400.0,
+    "p01": 75.2,
+    "p05": 82.0,
+    "p25": 95.2,
+    "p75": 142.9,
+    "p95": 205.2,
+    "p99": 277.8
+  },
+  "boundary_behavior": {
+    "equal_40": {
+      "count": 1,
+      "percent": 0.000496031746031746
+    },
+    "equal_400": {
+      "count": 4,
+      "percent": 0.001984126984126984
+    },
+    "lte_54": {
+      "count": 21,
+      "percent": 0.010416666666666668
+    },
+    "gte_250": {
+      "count": 3757,
+      "percent": 1.8635912698412698
+    },
+    "gte_300": {
+      "count": 1159,
+      "percent": 0.5749007936507937
+    }
+  },
+  "phenotype_distributions": {
+    "No diabetes-like": {
+      "participants": 40,
+      "observations": 80640,
+      "mean": 98.41034970238094,
+      "median": 94.9,
+      "std": 15.73273021795151,
+      "p05": 79.1,
+      "p25": 87.7,
+      "p75": 105.6,
+      "p95": 130.0,
+      "percent_gt_180": 0.043402777777777776,
+      "percent_gte_250": 0.0,
+      "participants_with_gt_180": 5
+    },
+    "Prediabetes-like": {
+      "participants": 30,
+      "observations": 60480,
+      "mean": 122.82395006613757,
+      "median": 116.8,
+      "std": 28.17218510159483,
+      "p05": 87.6,
+      "p25": 104.2,
+      "p75": 134.9,
+      "p95": 178.7,
+      "percent_gt_180": 4.689153439153439,
+      "percent_gte_250": 0.12731481481481483,
+      "participants_with_gt_180": 30
+    },
+    "T2D-like": {
+      "participants": 30,
+      "observations": 60480,
+      "mean": 162.16891865079364,
+      "median": 152.2,
+      "std": 47.32674599502502,
+      "p05": 103.2,
+      "p25": 132.3,
+      "p75": 180.3,
+      "p95": 259.5,
+      "percent_gt_180": 25.115740740740737,
+      "percent_gte_250": 6.084656084656085,
+      "participants_with_gt_180": 30
+    }
+  },
+  "participant_level_metric_summary_by_phenotype": {
+    "No diabetes-like": {
+      "mean_glucose": {
+        "min": 85.81374007936508,
+        "median": 98.26334325396826,
+        "mean": 98.41034970238096,
+        "max": 112.66125992063492
+      },
+      "median_glucose": {
+        "min": 82.9,
+        "median": 94.9,
+        "mean": 94.8075,
+        "max": 108.75
+      },
+      "std_glucose": {
+        "min": 10.677794320964125,
+        "median": 14.692033296546931,
+        "mean": 14.558579351861692,
+        "max": 18.326800335506903
+      },
+      "min_glucose": {
+        "min": 62.0,
+        "median": 70.80000000000001,
+        "mean": 71.66749999999999,
+        "max": 83.6
+      },
+      "max_glucose": {
+        "min": 128.6,
+        "median": 161.1,
+        "mean": 160.50750000000002,
+        "max": 195.8
+      },
+      "percent_gt_180": {
+        "min": 0.0,
+        "median": 0.0,
+        "mean": 0.043402777777777776,
+        "max": 0.7936507936507936
+      },
+      "percent_gte_250": {
+        "min": 0.0,
+        "median": 0.0,
+        "mean": 0.0,
+        "max": 0.0
+      }
+    },
+    "Prediabetes-like": {
+      "mean_glucose": {
+        "min": 100.44970238095237,
+        "median": 122.4030753968254,
+        "mean": 122.82395006613757,
+        "max": 140.7891369047619
+      },
+      "median_glucose": {
+        "min": 90.25,
+        "median": 115.0,
+        "mean": 115.10166666666669,
+        "max": 135.8
+      },
+      "std_glucose": {
+        "min": 18.26340360208836,
+        "median": 26.37551075553862,
+        "mean": 26.17091954360345,
+        "max": 33.2780492335651
+      },
+      "min_glucose": {
+        "min": 56.1,
+        "median": 80.6,
+        "mean": 79.44333333333333,
+        "max": 96.2
+      },
+      "max_glucose": {
+        "min": 195.5,
+        "median": 241.95,
+        "mean": 242.3466666666667,
+        "max": 288.1
+      },
+      "percent_gt_180": {
+        "min": 0.3968253968253968,
+        "median": 4.4146825396825395,
+        "mean": 4.689153439153439,
+        "max": 9.771825396825397
+      },
+      "percent_gte_250": {
+        "min": 0.0,
+        "median": 0.0,
+        "mean": 0.1273148148148148,
+        "max": 1.0912698412698412
+      }
+    },
+    "T2D-like": {
+      "mean_glucose": {
+        "min": 112.45555555555556,
+        "median": 163.11485615079366,
+        "mean": 162.16891865079361,
+        "max": 192.13690476190476
+      },
+      "median_glucose": {
+        "min": 102.2,
+        "median": 150.3,
+        "mean": 149.2533333333333,
+        "max": 175.0
+      },
+      "std_glucose": {
+        "min": 33.61788914650101,
+        "median": 42.739548965765266,
+        "mean": 43.370970964361305,
+        "max": 50.936451196527024
+      },
+      "min_glucose": {
+        "min": 40.0,
+        "median": 92.95,
+        "mean": 91.26666666666668,
+        "max": 126.2
+      },
+      "max_glucose": {
+        "min": 280.8,
+        "median": 356.6,
+        "mean": 353.95000000000005,
+        "max": 400.0
+      },
+      "percent_gt_180": {
+        "min": 7.341269841269842,
+        "median": 23.834325396825395,
+        "mean": 25.115740740740744,
+        "max": 44.19642857142857
+      },
+      "percent_gte_250": {
+        "min": 1.2400793650793651,
+        "median": 5.406746031746032,
+        "mean": 6.0846560846560855,
+        "max": 14.335317460317459
+      }
+    }
+  },
+  "temporal_smoothness": {
+    "overall": {
+      "median_abs_5min_change": 3.1000000000000085,
+      "p95_abs_5min_change": 13.5,
+      "p99_abs_5min_change": 22.700000000000017,
+      "max_abs_5min_change": 80.1,
+      "percent_gt_20": 1.5389578163771713,
+      "percent_gt_30": 0.4342431761786601,
+      "percent_gt_50": 0.06550868486352357
+    },
+    "by_phenotype": {
+      "No diabetes-like": {
+        "median_abs_5min_change": 2.1000000000000085,
+        "p95_abs_5min_change": 7.5,
+        "p99_abs_5min_change": 12.600000000000009,
+        "max_abs_5min_change": 46.400000000000006,
+        "percent_gt_20": 0.16501240694789082,
+        "percent_gt_30": 0.016129032258064516,
+        "percent_gt_50": 0.0
+      },
+      "Prediabetes-like": {
+        "median_abs_5min_change": 3.3000000000000114,
+        "p95_abs_5min_change": 11.599999999999994,
+        "p99_abs_5min_change": 20.0,
+        "max_abs_5min_change": 53.70000000000002,
+        "percent_gt_20": 0.9793217535153019,
+        "percent_gt_30": 0.22001654259718775,
+        "percent_gt_50": 0.0033085194375516956
+      },
+      "T2D-like": {
+        "median_abs_5min_change": 5.5,
+        "p95_abs_5min_change": 18.599999999999994,
+        "p99_abs_5min_change": 32.400000000000006,
+        "max_abs_5min_change": 80.1,
+        "percent_gt_20": 3.9305210918114146,
+        "percent_gt_30": 1.205955334987593,
+        "percent_gt_50": 0.21505376344086022
+      }
+    }
+  },
+  "hyperglycemia_distribution": {
+    "No diabetes-like": {
+      "total_gt_180_observations": 35,
+      "percent_gt_180": 0.043402777777777776,
+      "participants_with_gt_180": 5,
+      "median_gt_180_observations_per_affected_participant": 5.0,
+      "max_gt_180_observations_for_one_participant": 16
+    },
+    "Prediabetes-like": {
+      "total_gt_180_observations": 2836,
+      "percent_gt_180": 4.689153439153439,
+      "participants_with_gt_180": 30,
+      "median_gt_180_observations_per_affected_participant": 89.0,
+      "max_gt_180_observations_for_one_participant": 197
+    },
+    "T2D-like": {
+      "total_gt_180_observations": 15190,
+      "percent_gt_180": 25.115740740740744,
+      "participants_with_gt_180": 30,
+      "median_gt_180_observations_per_affected_participant": 480.5,
+      "max_gt_180_observations_for_one_participant": 891
+    }
+  },
+  "no_diabetes_like_hyperglycemia_investigation": {
+    "participants_with_gt_180": 5,
+    "total_gt_180_observations": 35,
+    "maximum_glucose_among_affected_participants": 195.8,
+    "events_among_affected_participants": 6,
+    "event_counts_by_affected_participant": {
+      "SYN-0002": 1,
+      "SYN-0006": 2,
+      "SYN-0013": 1,
+      "SYN-0018": 1,
+      "SYN-0037": 1
+    },
+    "concentration_assessment": "spread across multiple participants/excursions"
+  },
+  "hyperglycemic_event_structure": {
+    "No diabetes-like": {
+      "events": 6,
+      "participants_with_events": 5,
+      "median_events_per_affected_participant": 1.0,
+      "median_event_duration": 22.5,
+      "mean_event_duration": 24.166666666666668,
+      "maximum_event_duration": 45.0,
+      "median_event_peak_glucose": 189.3,
+      "maximum_event_peak_glucose": 195.8
+    },
+    "Prediabetes-like": {
+      "events": 316,
+      "participants_with_events": 30,
+      "median_events_per_affected_participant": 11.0,
+      "median_event_duration": 40.0,
+      "mean_event_duration": 40.822784810126585,
+      "maximum_event_duration": 125.0,
+      "median_event_peak_glucose": 197.5,
+      "maximum_event_peak_glucose": 288.1
+    },
+    "T2D-like": {
+      "events": 906,
+      "participants_with_events": 30,
+      "median_events_per_affected_participant": 27.5,
+      "median_event_duration": 85.0,
+      "mean_event_duration": 81.18101545253863,
+      "maximum_event_duration": 520.0,
+      "median_event_peak_glucose": 227.9,
+      "maximum_event_peak_glucose": 400.0
+    }
+  },
+  "event_total_comparison": {
+    "calculated_event_total": 1228,
+    "previous_prediction_stage_event_total": 1228,
+    "agrees_with_prediction_stage": true,
+    "explanation": "Totals agree because both analyses detect events directly from synthetic raw CGM using glucose >180 mg/dL and a >15-minute gap to start a new event."
+  },
+  "phenotype_overlap": {
+    "ranges": {
+      "No diabetes-like": {
+        "mean_glucose_range": [
+          85.81374007936508,
+          112.66125992063492
+        ],
+        "max_glucose_range": [
+          128.6,
+          195.8
+        ]
+      },
+      "Prediabetes-like": {
+        "mean_glucose_range": [
+          100.44970238095237,
+          140.7891369047619
+        ],
+        "max_glucose_range": [
+          195.5,
+          288.1
+        ]
+      },
+      "T2D-like": {
+        "mean_glucose_range": [
+          112.45555555555556,
+          192.13690476190476
+        ],
+        "max_glucose_range": [
+          280.8,
+          400.0
+        ]
+      }
+    },
+    "mean_overlap_pairs": [
+      "No diabetes-like / Prediabetes-like",
+      "Prediabetes-like / T2D-like"
+    ],
+    "max_overlap_pairs": [
+      "No diabetes-like / Prediabetes-like",
+      "Prediabetes-like / T2D-like"
+    ],
+    "qualitative_conclusion": "substantial overlap",
+    "explanation": "Participant-level mean glucose overlaps for ['No diabetes-like / Prediabetes-like', 'Prediabetes-like / T2D-like']; participant-level maximum glucose overlaps for ['No diabetes-like / Prediabetes-like', 'Prediabetes-like / T2D-like']."
+  },
+  "outputs": {
+    "participant_csv": "reports\\synthetic_cgm_analysis.csv",
+    "summary_json": "reports\\synthetic_cgm_analysis_summary.json",
+    "sample_trajectory_png": "reports\\synthetic_cgm_sample_trajectories.png"
+  },
+  "clinical_validation_note": "Synthetic phenotypes are simulation groups, not clinical diagnoses.",
+  "recommendation": {
+    "status": "SYNTHETIC DATA STATUS: ACCEPT FOR POC",
+    "reasons": [
+      "boundary clipping is limited, smoothness is acceptable, and phenotype groups are not fully separated"
+    ]
+  }
+}

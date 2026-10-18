@@ -1,0 +1,44 @@
+{
+  "dataset": "Hall_2018",
+  "overall_status": "PASS_WITH_WARNINGS",
+  "configuration": {
+    "segment_gap_minutes": 15,
+    "prediction_horizon_hours": 2,
+    "glucose_threshold_mg_dl": 180
+  },
+  "dataset_summary": {
+    "metadata_people": 57,
+    "glucose_files": 57,
+    "people_scanned": 57,
+    "successful_files": 52,
+    "files_with_warnings": 5,
+    "files_with_errors": 0,
+    "total_glucose_observations": 105426,
+    "missing_glucose_values": 0,
+    "non_numeric_glucose_values": 9,
+    "invalid_timestamps": 0,
+    "duplicate_timestamps": 0,
+    "observations_above_180": 826
+  },
+  "diabetes_population": {
+    "No diabetes": 38,
+    "Prediabetes": 14,
+    "T2D": 5
+  },
+  "critical_conditions": {
+    "metadata_schema": true,
+    "metadata_unique_person_ids": true,
+    "metadata_to_file_linkage": true,
+    "all_files_scanned": true,
+    "no_file_read_errors": true,
+    "no_schema_errors": true
+  },
+  "files_with_warnings": [
+    "1636-69-111",
+    "2133-011",
+    "2133-013",
+    "2133-022",
+    "2133-023"
+  ],
+  "files_with_errors": []
+}

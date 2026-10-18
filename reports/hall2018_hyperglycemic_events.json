@@ -1,0 +1,43 @@
+{
+  "dataset": "Hall_2018",
+  "configuration": {
+    "glucose_threshold_mg_dl": 180,
+    "recording_segment_gap_minutes": 15,
+    "event_gap_minutes": 15
+  },
+  "participants": {
+    "metadata_count": 57,
+    "glucose_file_count": 57,
+    "analysis_errors": 0
+  },
+  "event_counts": {
+    "all": 90,
+    "T2D": 24,
+    "Prediabetes": 30,
+    "No diabetes": 36
+  },
+  "T2D_summary": {
+    "participants_with_events": 4,
+    "events": 24,
+    "mean_duration_minutes": 70.20833333333333,
+    "median_duration_minutes": 75.0,
+    "max_duration_minutes": 165.0,
+    "mean_peak_glucose_mg_dl": 218.45833333333334,
+    "max_peak_glucose_mg_dl": 303.0
+  },
+  "T2D_participants_without_events": [
+    "1636-69-091"
+  ],
+  "event_type_counts": {
+    "multi_observation": 83,
+    "single_observation": 7
+  },
+  "notes": [
+    "An event consists of consecutive observations above the configured glucose threshold within the configured event-gap limit.",
+    "Recording gaps larger than the configured segment threshold are treated as separate recording segments.",
+    "Non-numeric glucose values are not converted into numeric values.",
+    "Single-observation events are retained rather than silently discarded.",
+    "Raw glucose files are never modified.",
+    "This analysis identifies event structure; it does not train or evaluate a prediction model."
+  ]
+}

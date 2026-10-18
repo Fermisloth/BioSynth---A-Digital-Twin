@@ -1,0 +1,70 @@
+{
+  "configuration": {
+    "lookback_minutes": 60,
+    "prediction_horizon_minutes": 120,
+    "hyperglycemia_threshold_mg_dl": 180.0,
+    "max_segment_gap_minutes": 15.0,
+    "event_gap_minutes": 15.0
+  },
+  "processing": {
+    "metadata_participants": 100,
+    "cgm_files_found": 100,
+    "participants_in_dataset": 100,
+    "failed_files": []
+  },
+  "detected_events": {
+    "total": 1228,
+    "by_phenotype": {
+      "T2D-like": 906,
+      "Prediabetes-like": 316,
+      "No diabetes-like": 6
+    },
+    "by_event_type": {
+      "multi_observation": 1035,
+      "single_observation": 193
+    }
+  },
+  "dataset": {
+    "rows": 198000,
+    "participants": 100
+  },
+  "target_distribution": {
+    "future_hyperglycemia": {
+      "positive": 41408,
+      "negative": 156592,
+      "positive_rate": 0.20913131313131314
+    },
+    "pre_event_target": {
+      "positive": 23696,
+      "negative": 174304,
+      "positive_rate": 0.11967676767676767
+    }
+  },
+  "prediction_class_counts": {
+    "negative": 155763,
+    "pre_event": 23696,
+    "event_underway": 18541
+  },
+  "event_relationship_counts": {
+    "pre_event": 100539,
+    "no_event": 78920,
+    "event_underway": 18541
+  },
+  "rows_by_simulation_phenotype": {
+    "No diabetes-like": 79200,
+    "Prediabetes-like": 59400,
+    "T2D-like": 59400
+  },
+  "outputs": {
+    "prediction_dataset": "reports\\synthetic_prediction_dataset.csv",
+    "detected_events": "reports\\synthetic_detected_hyperglycemic_events.csv",
+    "summary": "reports\\synthetic_prediction_dataset_summary.json"
+  },
+  "methodology_notes": [
+    "Synthetic simulator event metadata is not used as a model feature.",
+    "Detected hyperglycemic events are derived from raw synthetic CGM using glucose >180 mg/dL.",
+    "pre_event_target is positive only before a new detected event starts within the 120-minute horizon.",
+    "Rows where an event is already underway are kept but are not positive early-warning targets.",
+    "This remains synthetic POC data and is not clinically validated."
+  ]
+}
