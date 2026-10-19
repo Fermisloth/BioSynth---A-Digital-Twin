@@ -1,0 +1,464 @@
+/* ==============================================================================
+   BioSynth Digital Twin — Reference-Inspired Cobalt & Cloud Design System
+   Visual Identity:
+     Primary Cobalt: #2448A5
+     Cloud Background: #F5F7FA (with soft blue ambient canvas)
+     Slate Typography: #313A49 & #1E293B
+     Signal Blue Accent: #79A9D8
+     Card White: #FFFFFF
+   ============================================================================== */
+
+/* Ambient Soft Blue Canvas Background */
+.stApp {
+    background: linear-gradient(180deg, #EDF3FA 0%, #F5F7FA 100%);
+    color: #313A49;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+}
+
+/* Glass-like Frame Wrapper for main content */
+.main .block-container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 2.5rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    max-width: 1440px !important;
+}
+
+/* Sidebar Styling — Clean Clinical White */
+[data-testid="stSidebar"] {
+    background-color: #FFFFFF !important;
+    border-right: 1px solid #E2E8F0 !important;
+    box-shadow: 2px 0 8px rgba(36, 72, 165, 0.02);
+}
+
+[data-testid="stSidebar"] hr {
+    margin: 14px 0 !important;
+    border-color: #EEF2F6 !important;
+}
+
+/* Unified Hero & Header Container */
+.hero-container {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F4F8FD 100%);
+    border: 1px solid #D8E4F2;
+    border-left: 5px solid #2448A5;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(36, 72, 165, 0.04);
+}
+
+.hero-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #EAEFF6;
+}
+
+.hero-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.hero-logo-img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.hero-brand-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.70rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: rgba(36, 72, 165, 0.08);
+    color: #2448A5;
+    border: 1px solid rgba(36, 72, 165, 0.22);
+}
+
+.hero-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.hero-eyebrow {
+    color: #2448A5;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.hero-title {
+    color: #1E293B;
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.4px;
+    line-height: 1.25;
+}
+
+.hero-subtitle {
+    color: #475569;
+    font-size: 0.90rem;
+    margin: 0;
+    line-height: 1.5;
+    max-width: 950px;
+}
+
+/* Quick Patient Tag in Top Nav Row */
+.quick-patient-tag {
+    background: #FFFFFF;
+    border: 1px solid #D8E2F0;
+    border-radius: 20px;
+    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #1E293B;
+    box-shadow: 0 1px 3px rgba(36, 72, 165, 0.04);
+}
+
+/* Patient Persona Card */
+.persona-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(36, 72, 165, 0.03);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.persona-card:hover {
+    box-shadow: 0 4px 12px rgba(36, 72, 165, 0.08);
+    transform: translateY(-1px);
+}
+
+.persona-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2448A5, #3B82F6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    border: 1px solid #1D4ED8;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(36, 72, 165, 0.25);
+    flex-shrink: 0;
+}
+
+.persona-badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    background: #F1F5F9;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+    margin-right: 6px;
+    margin-bottom: 4px;
+}
+
+.persona-badge-cobalt {
+    background: rgba(36, 72, 165, 0.08);
+    color: #2448A5;
+    border: 1px solid rgba(36, 72, 165, 0.25);
+}
+
+.persona-badge-amber {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+.rx-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.70rem;
+    font-weight: 700;
+    background: rgba(36, 72, 165, 0.1);
+    color: #2448A5;
+    border: 1px solid rgba(36, 72, 165, 0.25);
+    margin-right: 6px;
+}
+
+/* Status Indicator Pills */
+.sync-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    background: rgba(16, 185, 129, 0.12);
+    color: #065F46;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.sync-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #10B981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.alert-status-pill {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.70rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.status-danger {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #F87171;
+}
+
+.status-warning {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FBBF24;
+}
+
+.status-normal {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #34D399;
+}
+
+.model-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.70rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(36, 72, 165, 0.12);
+    color: #2448A5;
+    border: 1px solid rgba(36, 72, 165, 0.3);
+}
+
+.simulation-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.70rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+.integration-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #EFF6FF;
+    color: #2448A5;
+    border: 1px solid #BFDBFE;
+}
+
+/* KPI Metric Cards — Crisp White Elevation */
+div[data-testid="stMetric"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    padding: 14px 16px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(36, 72, 165, 0.03) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+div[data-testid="stMetric"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 10px rgba(36, 72, 165, 0.08) !important;
+}
+
+div[data-testid="stMetricLabel"] {
+    color: #64748B !important;
+    font-size: 0.80rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+div[data-testid="stMetricValue"] {
+    color: #2448A5 !important;
+    font-size: 1.50rem !important;
+    font-weight: 800 !important;
+}
+
+/* Glass & Clinical Cards */
+.glass-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(36, 72, 165, 0.03);
+    transition: box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+    box-shadow: 0 3px 8px rgba(36, 72, 165, 0.06);
+}
+
+.alert-card-danger {
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #991B1B;
+    margin-bottom: 14px;
+}
+
+.alert-card-safe {
+    background: #ECFDF5;
+    border: 1px solid #6EE7B7;
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #065F46;
+    margin-bottom: 14px;
+}
+
+.alert-card-amber {
+    background: #FFFBEB;
+    border: 1px solid #FCD34D;
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #92400E;
+    margin-bottom: 14px;
+}
+
+/* Legend Dots */
+.legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.dot-green { background-color: #10B981; box-shadow: 0 0 4px rgba(16, 185, 129, 0.5); }
+.dot-amber { background-color: #F59E0B; box-shadow: 0 0 4px rgba(245, 158, 11, 0.5); }
+.dot-red   { background-color: #EF4444; box-shadow: 0 0 4px rgba(239, 68, 68, 0.5); }
+
+/* Primary Button Styling */
+
+/* Presentation Mode Overrides */
+.presentation-mode {
+    max-width: 100% !important;
+}
+
+/* Runtime Verification Diagnostic Styling */
+.verification-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.verif-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.76rem;
+    margin-bottom: 5px;
+    gap: 8px;
+}
+
+.verif-label {
+    color: #64748B;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.verif-val {
+    color: #1E293B;
+    font-weight: 700;
+    text-align: right;
+    word-break: break-word;
+}
+
+.sync-dot-amber {
+    background-color: #F59E0B !important;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.6) !important;
+}
+
+/* Presentation Mode Badges & Presets */
+.presentation-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    background: #2448A5;
+    color: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(36, 72, 165, 0.25);
+}
+
+.presentation-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #93C5FD;
+    box-shadow: 0 0 6px rgba(147, 197, 253, 0.9);
+}
+
+.presentation-active-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+
+/* Hide default streamlit footer */
+footer { visibility: hidden; }
