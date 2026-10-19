@@ -1,139 +1,70 @@
- # BioSynth Architecture Guide
+# Architecture
 
- This document explains the current repository architecture in plain language. It is intentionally more detailed than a diagram: the goal is to show what each layer does, why it exists, and what information is allowed to cross each boundary.
+BioSynth has an offline data and training pipeline, a reusable prediction runtime, and two Streamlit entry points. The command-center UI (`ui/app.py`) and the model-backed replay (`app.py`) are separate applications with different responsibilities.
 
- ## 1. The shortest explanation
+## System flow
 
- BioSynth is a small prediction system with two input streams:
+```mermaid
+flowchart TB
+  subgraph offline[Offline generation and evaluation]
+    CGM[Generated synthetic CGM] --> LABEL[Event labels and prediction rows]
+    CGM --> FEATURES[18 historical CGM features]
+    EHR[Generated synthetic EHR] --> EHRFEATURES[11 encoded EHR features]
+    LABEL --> FEATURES
+    FEATURES --> CGMTRAIN[CGM-only evaluation and training]
+    FEATURES --> FUSE[Join by participant and timestamp]
+    EHRFEATURES --> FUSE
+    FUSE --> FUSIONTRAIN[Fusion evaluation and training]
+    CGMTRAIN --> MODEL1[CGM model artifact + metadata]
+    FUSIONTRAIN --> MODEL2[Fusion model artifact + metadata]
+  end
+  subgraph runtime[Prediction runtime]
+    HISTORY[CGM readings at/before prediction time] --> TWIN[BioSynthTwin]
+    PROFILE[Explicit EHR profile in fusion mode] --> TWIN
+    MODEL1 --> TWIN
+    MODEL2 --> TWIN
+    TWIN --> STATE[Risk probability and display state]
+  end
+  STATE --> REPLAY[Root app.py: model-backed event replay]
+  STATE --> UI[ui/app.py: command-center UI when model is available]
+  SIM[Calibrated simulation fallback] --> UI
+```
 
- 1. A static synthetic EHR profile, such as age, BMI, HbA1c, and activity level.
- 2. A changing synthetic CGM stream, containing timestamped glucose readings.
+## Source ownership
 
- At a selected replay time, the system uses the participant's EHR profile and only the CGM readings available up to that time. It converts those inputs into 29 numeric features, sends them to a saved logistic-regression pipeline, and displays a Digital Twin state plus a 120-minute pre-event risk.
+| Layer | Source of truth | Responsibility |
+| --- | --- | --- |
+| Configuration | `configs/` | Source data locations and model settings. |
+| Synthetic data generation | `scripts/generate_synthetic_*.py` | Generate simulated CGM and EHR data. |
+| Labels and features | `scripts/build_*` | Detect engineering events, create targets, calculate features, and join streams. |
+| Evaluation and training | `scripts/cross_validate_*.py`, `scripts/train_*` | Evaluate participant-separated models and save full-data artifacts. |
+| Prediction contract | `src/biosynth_twin.py` | Validate mode and inputs, filter historical CGM, build features, run the model, return state. |
+| Guided event replay | `app.py` | Select a synthetic event, timestamp, and model mode; call the runtime. |
+| Command-center UI | `ui/app.py`, `ui/assets/` | Render dashboard views and use the runtime or simulation path. |
+| Contracts | `tests/test_biosynth_twin.py` | Check important runtime behavior. |
 
- The CGM-only model is retained as a comparison baseline. It uses the same 18 CGM features but does not receive EHR values.
+## Model inputs and data boundary
 
- ```mermaid
- flowchart LR
-   EHR[Static synthetic EHR<br/>100 profiles] --> EENC[EHR encoding<br/>11 numeric features]
-   CGM[Dynamic synthetic CGM<br/>5-minute readings] --> HIST[Historical window<br/>60 minutes, at or before replay time]
-   HIST --> CENC[CGM feature engineering<br/>18 trajectory features]
-   EENC --> FUSION[EHR + CGM fusion<br/>29 total features]
-   CENC --> FUSION
-   FUSION --> MODEL[Logistic regression pipeline]
-   MODEL --> TWIN[BioSynthTwin runtime]
-   TWIN --> DASH[Streamlit dashboard]
-   DASH --> RISK[120-minute pre-event risk]
-   CENC --> BASE[Separate CGM-only baseline]
- ```
+The target `pre_event_target` labels whether a new excursion above the engineering threshold of 180 mg/dL begins within 120 minutes. Label generation can inspect future readings to establish the training answer. Prediction features cannot.
 
- ## 2. Two different pipelines
+At prediction time, `BioSynthTwin` keeps rows with timestamps at or before the requested prediction timestamp and calculates features from the 60-minute history window:
 
- The project has an offline pipeline and a live inference pipeline.
+- CGM-only mode builds 18 trajectory features.
+- Fusion mode adds 11 encoded values from a caller-supplied static EHR profile, for 29 ordered features total.
 
- ### Offline training and evaluation
+Participant ID, simulation phenotype, event ground truth, simulator parameters, and future CGM are not model features. Fusion mode requires a complete EHR profile; the runtime does not silently change to CGM-only mode.
 
- Offline work happens before someone uses the dashboard:
+## Application boundaries
 
- ```text
- synthetic CGM files + synthetic EHR records
-             |
-             v
- event labels and historical features
-             |
-             v
- 18 CGM features + 11 encoded EHR features
-             |
-             v
- participant-separated evaluation
-             |
-             v
- final full-data fusion model artifact
- ```
+| App | Model behavior | Data behavior |
+| --- | --- | --- |
+| `ui/app.py` | Tries to load the CGM-only runtime. Its calibrated simulation path remains available if loading fails. | Uses synthetic files when present and demo profiles for the command-center display. |
+| `app.py` | Uses `BioSynthTwin` for guided replay and offers CGM-only and fusion modes. | Reads the generated participant CGM, EHR, and detected-event data; requires model artifacts. |
 
- The offline scripts create data, create labels, build features, measure models, and save the final model. They may read future values while constructing a training label because the label is the answer we want to learn. They must not place those future values into the predictive feature columns.
+The command-center forecast/simulation calculations are presentation logic and should not be mistaken for runtime inference when the sidebar reports a fallback. The root replay is the direct model-backed demonstration.
 
- ### Live replay and inference
+## Generated artifacts
 
- Live work happens every time the dashboard moves to a replay timestamp:
+The data builders write under `data/` and `reports/`. Training scripts write `.joblib` model files under `models/`; Git ignores model binaries. Model metadata JSON files preserve the feature order and reference evaluation metrics. A fresh clone may therefore contain metadata without the model binary needed to run a model-backed interface.
 
- ```text
- selected replay timestamp
-             |
-             +--> CGM rows with timestamp <= selected time
-             |
-             +--> explicit static EHR profile
-                          |
-                          v
-                  BioSynthTwin runtime
-                          |
-                          v
-                  29 feature values
-                          |
-                          v
-                  saved fusion model
-                          |
-                          v
-                  Digital Twin state and risk
- ```
-
- The live pipeline cannot use future CGM. The dashboard also shows a separate retrospective “What happened next?” section, but that section is deliberately not passed to the model.
-
- ```mermaid
- flowchart TD
-   subgraph OFFLINE[Offline training and evaluation]
-     RAW[Generated CGM + generated EHR] --> LABELS[Event labels]
-     LABELS --> FEATURES[18 CGM + 11 EHR features]
-     FEATURES --> CV[Participant-separated cross-validation]
-     CV --> ARTIFACT[Saved model artifacts]
-   end
-   subgraph LIVE[Live replay and inference]
-     TIME[Replay timestamp] --> FILTER[Keep CGM timestamp <= replay time]
-     PROFILE[Explicit participant EHR] --> RUNTIME[BioSynthTwin]
-     FILTER --> RUNTIME
-     ARTIFACT --> RUNTIME
-     RUNTIME --> STATE[Risk + Digital Twin state]
-     STATE --> UI[Dashboard display]
-   end
-   FUTURE[Future CGM for retrospective story] -. never model input .-> UI
- ```
-
- ## 3. Repository ownership map
-
- | Layer | Main files | Responsibility |
- | --- | --- | --- |
- | Raw synthetic inputs | `data/02_synthetic/cgm/`, `data/02_synthetic/ehr/` | Store generated participant data. |
- | Feature construction | `scripts/build_synthetic_trajectory_features.py`, `scripts/build_ehr_cgm_fusion_features.py` | Turn raw data into model-ready numeric columns. |
- | Evaluation | `scripts/cross_validate_synthetic_models.py`, `scripts/cross_validate_ehr_cgm_fusion.py` | Measure models on participant-separated folds. |
- | Final training | `scripts/train_synthetic_final_model.py`, `scripts/train_ehr_cgm_final_model.py` | Fit artifacts used by the runtime. |
- | Runtime | `src/biosynth_twin.py` | Validate input, calculate features, call the saved model, and return state. |
- | Dashboard | `app.py` | Select mode, load SYN-0085, filter history, call runtime, and display state. |
- | Documentation | `docs/` | Explain decisions, contracts, results, and limitations. |
-
- ## 4. Why the fusion model has 29 features
-
- The model input is deliberately divided into two visible groups:
-
- - 18 features describe what glucose has been doing recently.
- - 11 features describe the participant's static synthetic health profile.
-
- Keeping the two groups explicit makes the system easier to inspect. It also makes it possible to compare the full fusion model against the CGM-only baseline without changing the CGM feature definitions.
-
- ## 5. Runtime safety boundaries
-
- The runtime enforces these decisions:
-
- - `person_id` identifies a participant in files but is not a predictive feature.
- - `simulation_phenotype` is context for analysis but is not a predictive feature.
- - Future CGM readings are filtered out before feature calculation.
- - Future event labels are never supplied to `BioSynthTwin`.
- - Fusion mode requires an EHR profile explicitly. Missing EHR does not silently trigger CGM-only inference.
- - The model's risk thresholds are display thresholds, not clinical thresholds.
-
- ## 6. Why the baseline is separate
-
- The CGM-only model answers a useful comparison question: “How much signal exists in glucose trajectory alone?” It is not blended with the fusion prediction. Reporting it separately prevents the dashboard from hiding whether EHR addition helped, did not help, or produced mixed results.
-
- ## 7. Evidence boundaries
-
- Hall 2018 is real CGM evidence for the general idea that trajectory features can carry predictive signal. It did not contain the synthetic EHR stream used here and therefore did not validate EHR + CGM fusion. Fusion results come from the synthetic BioSynth population and are labeled mixed: ROC-AUC improved, while overall PR-AUC declined slightly.
+Hall 2018 remains a separate CGM-only evidence branch. It does not validate the synthetic EHR + CGM fusion model. For measured results and the interpretation, see the [model card](model_card.md).

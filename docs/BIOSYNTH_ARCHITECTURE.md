@@ -4,12 +4,12 @@ Digital Twin Challenge 2026 architecture documentation for the BioSynth proof of
 
 ## System summary
 
-BioSynth combines synthetic static EHR profiles with dynamic synthetic CGM replay to estimate whether a new glucose excursion above 180 mg/dL may begin within the next 120 minutes. The deployed dashboard supports two runtime modes:
+BioSynth combines synthetic static EHR profiles with dynamic synthetic CGM replay to estimate whether a new glucose excursion above 180 mg/dL may begin within the next 120 minutes. The repository contains two Streamlit applications: root `app.py` is the model-backed guided event replay, and `ui/app.py` is the BioSynth command-center interface. The root replay supports two runtime modes:
 
 - `EHR_CGM_FUSION`: 18 historical CGM trajectory features plus 11 encoded EHR features.
 - `CGM_ONLY`: the existing 18-feature CGM trajectory baseline.
 
-The CGM-only model is a comparison baseline and is not part of the fusion prediction path.
+The CGM-only model is a comparison baseline and is not part of the fusion prediction path. The command-center UI currently attempts CGM-only inference and has a calibrated simulation fallback if the model artifact cannot be loaded.
 
 ## Architecture diagram
 
@@ -61,7 +61,7 @@ flowchart TB
     end
 ```
 
-## Live fusion path
+## Live fusion path in root `app.py`
 
 1. Static synthetic EHR is loaded from `data/02_synthetic/ehr/synthetic_ehr.csv`.
 2. The dashboard selects the `SYN-0085` profile and supplies it explicitly to `BioSynthTwin`.
