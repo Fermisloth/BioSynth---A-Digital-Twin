@@ -58,7 +58,7 @@ Run the automated runtime tests:
 python -m unittest discover -s tests -v
 ```
 
-On Windows without activating `.venv`, use `\.venv\Scripts\streamlit.exe run ui\app.py` or `\.venv\Scripts\python.exe -m unittest discover -s tests -v` in PowerShell.
+In Windows PowerShell, if you do not activate `.venv`, run `./.venv/Scripts/streamlit.exe run ui/app.py` or `./.venv/Scripts/python.exe -m unittest discover -s tests -v`.
 
 ## Prediction flow
 
