@@ -1,51 +1,28 @@
-# BioSynth Documentation Map
+# BioSynth documentation
 
-This folder explains the BioSynth Digital Twin in layers. You do not need to be a programmer to start. Read the documents in the order that matches your question.
+Choose the document that answers your current question. The repository has two Streamlit entry points; read the [frontend guide](frontend_guide.md) before choosing which interface to launch.
 
- ```mermaid
- flowchart TD
-   START[Choose a question] --> OVERVIEW[Technical guide<br/>plain-language tour]
-   START --> ARCH[Architecture<br/>system boundaries]
-   START --> DATA[Data dictionary<br/>columns and meanings]
-   START --> API[API reference<br/>runtime inputs and outputs]
-   START --> CARD[Model card<br/>metrics and limitations]
-   OVERVIEW --> CODE[Repository code and generated artifacts]
-   ARCH --> CODE
-   DATA --> CODE
-   API --> CODE
-   CARD --> CODE
- ```
+## Start by task
 
-## Start Here
-
-1. **[BIOSYNTH_TECHNICAL_GUIDE.md](BIOSYNTH_TECHNICAL_GUIDE.md)** explains the whole project in ordinary language: data, scripts, machine-learning ideas, runtime, dashboard, design decisions, and limitations.
-2. **[BIOSYNTH_ARCHITECTURE.md](BIOSYNTH_ARCHITECTURE.md)** gives the official architecture explanation and separates offline training from live replay and inference. The matching **[BIOSYNTH_ARCHITECTURE.pdf](BIOSYNTH_ARCHITECTURE.pdf)** is the printable diagram version.
-3. **[data_dictionary.md](data_dictionary.md)** explains every important column, what it means, where it comes from, and whether it is allowed into the model.
-4. **[architecture.md](architecture.md)** explains why the folders and pipeline stages exist, why the fusion model has 29 features, and where safety boundaries are enforced.
-5. **[api_reference.md](api_reference.md)** explains how code calls `BioSynthTwin`, what inputs are required, and what the returned prediction state means.
-6. **[model_card.md](model_card.md)** explains what the models were trained to do, how they were evaluated, what the metrics mean, and what the models must not be used for.
-
-## Choose By Question
-
-| Question | Read this first |
+| I want to… | Read |
 | --- | --- |
-| What is BioSynth trying to predict? | Technical guide, sections 1 and 2 |
-| Where does each dataset come from? | Data dictionary |
-| Why are there 18 CGM features and 11 EHR features? | Architecture guide and data dictionary |
-| How does the dashboard make one prediction? | API reference and technical guide section 17 |
-| What is real evidence versus synthetic evidence? | Technical guide section 1 and model card |
-| Can I rebuild the pipeline? | Technical guide section 16 |
-| How should I interpret PR-AUC and ROC-AUC? | Model card and technical guide section 26 |
-| What are the limitations? | Model card and technical guide section 18 |
+| Install the project and run an interface | [Project README](../README.md) |
+| Understand the complete data-to-prediction flow | [Technical guide](BIOSYNTH_TECHNICAL_GUIDE.md) |
+| Understand module boundaries and data safety rules | [Architecture](architecture.md) |
+| Launch or change the command-center UI | [Frontend guide](frontend_guide.md) |
+| Call `BioSynthTwin` from Python | [Runtime API reference](api_reference.md) |
+| Understand a dataset or feature column | [Data dictionary](data_dictionary.md) |
+| Interpret evaluation metrics and limitations | [Model card](model_card.md) |
+| View the presentation architecture diagram | [Architecture overview](BIOSYNTH_ARCHITECTURE.md) and [PDF](BIOSYNTH_ARCHITECTURE.pdf) |
 
-## One-Paragraph System Summary
+## Project boundaries
 
-BioSynth creates 100 virtual participants. Each participant has a changing synthetic CGM stream and one static synthetic EHR profile. During offline work, historical CGM is converted into 18 trajectory features, the EHR profile is converted into 11 numeric features, and the two sets are joined into 29 fusion features. A participant-separated logistic regression model learns from those features. During live replay, `BioSynthTwin` receives only CGM readings at or before the replay timestamp plus the selected participant's EHR profile, computes the same features, loads the saved artifact, and returns a probability for a new glucose excursion above 180 mg/dL beginning within the next 120 minutes. The Streamlit dashboard turns that state into a readable replay.
+- The runtime predicts `pre_event_target`: a new excursion above the engineering threshold of 180 mg/dL beginning within 120 minutes.
+- Runtime feature construction uses up to 60 minutes of CGM history at or before the prediction timestamp.
+- `CGM_ONLY` uses 18 CGM features. `EHR_CGM_FUSION` adds 11 fields from a required, explicitly supplied synthetic EHR profile.
+- Hall 2018 supplies real-CGM proof-of-signal evidence for the trajectory model. It does not validate EHR + CGM fusion.
+- The project and its risk categories are a research POC, not a medical device or clinical decision tool.
 
-## Important Boundaries
+## Documentation structure
 
-- All EHR records in this POC are synthetic. They are not genuine clinical records.
-- The CGM-only model is a comparison baseline. It is separate from the EHR + CGM fusion model.
-- Hall 2018 is real-world CGM evidence for trajectory signal. It did not validate the synthetic EHR fusion model.
-- The runtime cannot use future CGM readings. Future values may appear in the dashboard's retrospective story, but they are kept outside model input.
-- A high displayed risk is a model output for a hackathon proof of concept, not medical advice.
+The docs separate task instructions (setup and running), explanations (architecture and model behavior), and reference material (API and data columns). This follows the user needs described by [Diátaxis](https://diataxis.fr/start-here/) and keeps the top-level [README](../README.md) focused on orientation and first steps. For the writing principles behind this structure, see [documentation research notes](documentation-research.md).
