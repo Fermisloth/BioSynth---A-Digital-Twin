@@ -12,3 +12,4 @@ artifacts/
 *.pth
 *.onnx
 .vscode/
+tmp/visual-review/

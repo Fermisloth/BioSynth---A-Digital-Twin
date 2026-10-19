@@ -1,0 +1,10 @@
+[theme]
+base = "light"
+primaryColor = "#7954b5"
+backgroundColor = "#eae9eb"
+secondaryBackgroundColor = "#f5f3f7"
+textColor = "#171519"
+font = "Arial, Helvetica, sans-serif"
+headingFont = "Arial, Helvetica, sans-serif"
+baseRadius = "12px"
+buttonRadius = "full"
