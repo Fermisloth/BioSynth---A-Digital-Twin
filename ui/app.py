@@ -29,7 +29,7 @@ ASSETS_DIR = UI_DIR / "assets"
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-LOGO_PATH = ASSETS_DIR / "twin_wave_logo.png"
+LOGO_PATH = ASSETS_DIR / "biosynth_dna_logo.png"
 ICON_PATH = ASSETS_DIR / "twin_wave_icon.png"
 CSS_PATH = ASSETS_DIR / "style.css"
 
@@ -59,6 +59,8 @@ def get_image_base64(path: Path) -> str:
 
 
 logo_base64 = get_image_base64(LOGO_PATH)
+dna_base64 = get_image_base64(ASSETS_DIR / "dna-helix.svg")
+dna_still_base64 = get_image_base64(ASSETS_DIR / "dna-helix-still.svg")
 
 
 # ==============================================================================
@@ -293,7 +295,17 @@ if "presentation_mode" not in st.session_state:
 # ==============================================================================
 
 with st.sidebar:
-    if LOGO_PATH.exists():
+    if dna_still_base64:
+        st.markdown(
+            f'''
+            <div class="sidebar-brand-lockup">
+                <img src="data:image/svg+xml;base64,{dna_still_base64}" alt="" />
+                <span>BioSynth</span>
+            </div>
+            ''',
+            unsafe_allow_html=True,
+        )
+    elif LOGO_PATH.exists():
         st.image(str(LOGO_PATH), use_container_width=True)
     else:
         st.markdown("### **BioSynth** · Digital Twin")
@@ -658,9 +670,13 @@ else:
 
 # Build inline base64 logo tag or styled text if image missing
 logo_html = (
-    f'<img src="data:image/png;base64,{logo_base64}" class="hero-logo-img" alt="BioSynth Logo" />'
-    if logo_base64
-    else '<span style="font-weight:800; font-size:1.4rem; color:#2448A5;">BioSynth</span>'
+    f'<div class="hero-brand-lockup"><img src="data:image/svg+xml;base64,{dna_base64}" class="hero-logo-mark" alt="" /><span>BioSynth</span></div>'
+    if dna_base64
+    else (
+        f'<img src="data:image/png;base64,{logo_base64}" class="hero-logo-img" alt="BioSynth Logo" />'
+        if logo_base64
+        else '<span style="font-weight:800; font-size:1.4rem; color:#2448A5;">BioSynth</span>'
+    )
 )
 
 runtime_label = inference_info["label"]
@@ -671,11 +687,7 @@ if presentation_mode:
     st.markdown(
         """
         <style>
-        .hero-title { font-size: 2.05rem !important; }
-        .hero-container { padding: 22px 28px !important; border-left: 6px solid #2448A5 !important; }
-        div[data-testid="stMetricValue"] { font-size: 1.85rem !important; color: #2448A5 !important; font-weight: 800 !important; }
-        div[data-testid="stMetric"] { padding: 18px 20px !important; border: 1.5px solid #CBD5E1 !important; box-shadow: 0 4px 14px rgba(36, 72, 165, 0.06) !important; }
-        .persona-card { padding: 20px 24px !important; border: 1.5px solid #CBD5E1 !important; box-shadow: 0 4px 14px rgba(36, 72, 165, 0.06) !important; }
+        .presentation-badge { background: #eee8fa; color: #5b398b; }
         </style>
         """,
         unsafe_allow_html=True,
@@ -715,11 +727,16 @@ st.markdown(
 {hero_badges_html}
 </div>
 </div>
-<div>
+<div class="hero-copy">
 <div class="hero-eyebrow">{hero_eyebrow}</div>
 <h1 class="hero-title">{hero_title}</h1>
 <p class="hero-subtitle">{hero_subtitle}</p>
+<a class="hero-explore" href="#patient-workspace">Explore patient insights <span aria-hidden="true">&#8595;</span></a>
 </div>
+<div class="hero-dna-art" aria-hidden="true">
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="data:image/svg+xml;base64,{dna_still_base64}" /><img src="data:image/svg+xml;base64,{dna_base64}" alt="" /></picture>
+</div>
+<div class="hero-footnote">A closer view of your digital twin.<span>Observed signals. Predictive insights.</span></div>
 </div>""",
     unsafe_allow_html=True,
 )
@@ -730,7 +747,7 @@ st.write("")
 # Patient Persona Summary Card
 st.markdown(
     f"""
-    <div class="persona-card">
+    <div class="persona-card" id="patient-workspace">
         <div class="persona-avatar">{patient['avatar']}</div>
         <div style="flex: 1; min-width: 260px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
@@ -1295,9 +1312,9 @@ elif current_view == "Counterfactual":
         )
 
         fig_cf.update_layout(
-            title="Baseline vs. Counterfactual Projected Trajectory",
-            height=340,
-            margin=dict(l=10, r=10, t=35, b=10),
+            title=dict(text="Baseline vs. Counterfactual Projected Trajectory", y=0.98, yanchor="top", font=dict(size=14)),
+            height=390,
+            margin=dict(l=10, r=10, t=85, b=10),
             template="plotly_white",
             paper_bgcolor="#FFFFFF",
             plot_bgcolor="#FFFFFF",
