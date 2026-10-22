@@ -14,6 +14,9 @@ Choose the document that answers your current question. The repository has two S
 | Understand a dataset or feature column | [Data dictionary](data_dictionary.md) |
 | Interpret evaluation metrics and limitations | [Model card](model_card.md) |
 | View the presentation architecture diagram | [Architecture overview](BIOSYNTH_ARCHITECTURE.md) and [PDF](BIOSYNTH_ARCHITECTURE.pdf) |
+| Prepare a ten-minute prototype explanation | [10-minute video script](BIOSYNTH_10_MINUTE_VIDEO_SCRIPT.md) |
+| Explain the current command-center screenshots | [Command-center video script](BIOSYNTH_10_MINUTE_COMMAND_CENTER_VIDEO_SCRIPT.md) |
+| Present the 19-slide PowerPoint in ten minutes | [PowerPoint speaker script](BIOSYNTH_PPT_10_MINUTE_SPEAKER_SCRIPT.md) |
 
 ## Project boundaries
 
