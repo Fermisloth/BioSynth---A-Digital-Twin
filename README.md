@@ -4,12 +4,19 @@ BioSynth is a research proof of concept for estimating whether a new glucose exc
 
 ## Run the interface
 
-Use Python 3.11 or newer. From the repository root, create an environment and install the pinned dependencies:
+Use Python 3.11 or newer. On Windows, install Python from [python.org](https://www.python.org/downloads/) or the Microsoft Store, then open a new PowerShell window so the `py` launcher is available. From the repository root, create an environment and install the pinned dependencies:
 
 ```powershell
-python -m venv .venv
+py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+```
+
+If `py` is not recognized after installing Python, use the installed interpreter directly, for example:
+
+```powershell
+& "$env:LocalAppData\Programs\Python\Python311\python.exe" -m venv .venv
 ```
 
 Launch the BioSynth command-center interface:
